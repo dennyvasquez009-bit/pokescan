@@ -544,6 +544,8 @@ function renderMarketPanel(m) {
     <div style="font-size:9px;color:var(--text3);line-height:1.7;">Match: ${m.name}</div>
     <a class="pc-link" href="${m.url}" target="_blank">🔗 View full price history on PriceCharting</a>`;
 }
+
+async function callClaude(imgB64, cardName) {
   const prompt = `You are a professional PSA Pokémon card grader.
 Card: "${cardName}"
 Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %.
