@@ -12,35 +12,29 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --gold:#e8b923;--gold-dim:rgba(232,185,35,0.12);--gold-border:rgba(232,185,35,0.35);
-  --bg:#0c0c0c;--bg2:#161616;--bg3:#202020;--bg4:#2a2a2a;
+  --bg:#0c0c0c;--bg2:#161616;--bg3:#202020;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
   --text:#ece8df;--text2:#888;--text3:#444;
-  --green:#4caf50;--orange:#ff9800;--red:#f44336;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bot:env(safe-area-inset-bottom,0px);
+  --green:#4caf50;--green-dim:rgba(76,175,80,0.09);--green-border:rgba(76,175,80,0.35);
+  --orange:#ff9800;--red:#f44336;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
 }
 html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;}
-
-/* ── APP SHELL ── */
 .app{max-width:480px;margin:0 auto;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 90px);}
 
-/* ── HEADER ── */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;}
 .logo em{color:var(--gold);font-style:normal;}
 .tag{font-size:8px;letter-spacing:2px;color:var(--text2);border:0.5px solid var(--border2);padding:4px 9px;border-radius:3px;}
 
-/* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);padding:10px 0 calc(var(--safe-bot) + 10px);display:flex;justify-content:space-around;z-index:100;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 20px;cursor:pointer;color:var(--text3);transition:color 0.15s;border:none;background:none;}
 .bnav-item.active{color:var(--gold);}
 .bnav-icon{font-size:20px;line-height:1;}
 .bnav-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;}
 
-/* ── VIEWS ── */
 .view{display:none;}.view.active{display:block;}
 
-/* ── API SETUP ── */
 .api-card{background:var(--bg2);border:1px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:18px;}
 .api-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;}
 .api-card p{font-size:10px;color:var(--text2);line-height:1.9;margin-bottom:12px;}
@@ -51,12 +45,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .api-btn{padding:11px 16px;background:var(--gold);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:#1a1000;cursor:pointer;white-space:nowrap;}
 .api-saved{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--green);margin-top:8px;}
 
-/* ── SCANNER ── */
 .card-name-wrap{margin-bottom:14px;}
 .card-name-input{width:100%;padding:12px 14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;}
 .card-name-input:focus{border-color:var(--gold);}
 
-/* BIG CAMERA BUTTON */
 .cam-trigger{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1.5px dashed var(--border2);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;position:relative;overflow:hidden;transition:border-color 0.2s;}
 .cam-trigger:active{opacity:0.85;}
 .cam-trigger.has-image{border-style:solid;border-color:var(--border);}
@@ -67,7 +59,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ct-text{font-size:11px;color:var(--text3);text-align:center;line-height:1.9;}
 .ct-sub{font-size:10px;color:var(--text3);opacity:0.6;margin-top:2px;}
 
-/* Scan overlays */
 .corner-marker{position:absolute;width:20px;height:20px;pointer-events:none;opacity:0;transition:opacity 0.4s;}
 .corner-marker.tl{top:5%;left:3%;border-top:2.5px solid;border-left:2.5px solid;border-radius:3px 0 0 0;}
 .corner-marker.tr{top:5%;right:3%;border-top:2.5px solid;border-right:2.5px solid;border-radius:0 3px 0 0;}
@@ -85,7 +76,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .scan-badge{position:absolute;top:12px;right:12px;background:rgba(232,185,35,0.92);color:#1a1000;font-size:9px;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none;}
 .is-scanning .scan-badge{display:block;}
 
-/* Action buttons */
 .btn-row{display:flex;gap:10px;margin-top:12px;}
 .btn{flex:1;padding:14px;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);transition:all 0.15s;-webkit-appearance:none;}
 .btn:active{opacity:0.75;transform:scale(0.98);}
@@ -96,41 +86,35 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .spinner{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:5px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ── RESULTS CARDS ── */
 .results-section{margin-top:16px;display:flex;flex-direction:column;gap:12px;}
 .rcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;}
 .rcard-hd{padding:10px 14px;border-bottom:0.5px solid var(--border);font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
 .rcard-bd{padding:14px;}
 .no-data{text-align:center;color:var(--text3);font-size:11px;padding:20px 10px;line-height:2;}
 
-/* Grade hero */
 .grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
 .grade-ring{width:66px;height:66px;border-radius:50%;border:2.5px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
 .gr-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
 .gr-max{font-size:9px;color:var(--text2);}
 .gi-name{font-size:15px;font-weight:500;letter-spacing:1px;}
 .gi-card{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.6;}
-
 .bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .bar-item{background:var(--bg3);border-radius:8px;padding:9px 11px;}
 .bar-lbl{font-size:9px;color:var(--text2);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
 .bar-track{height:4px;background:var(--border2);border-radius:2px;}
 .bar-fill{height:4px;border-radius:2px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}
 .bar-score{font-size:12px;font-weight:500;margin-top:5px;}
-
 .notes-box{background:var(--bg3);border-radius:8px;padding:10px 12px;font-size:10px;line-height:1.9;color:var(--text2);margin-bottom:12px;}
 .acc-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:12px;}
 .acc-bar-w{flex:1;height:5px;background:var(--border2);border-radius:3px;}
 .acc-bar-f{height:5px;border-radius:3px;background:var(--gold);transition:width 0.8s;}
 .acc-lbl{font-size:9px;letter-spacing:1px;color:var(--text2);white-space:nowrap;}
 .acc-pct{font-size:12px;font-weight:500;min-width:36px;text-align:right;}
-
 .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
 .dg-item{background:var(--bg3);border-radius:8px;padding:8px 9px;}
 .dg-lbl{font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;text-transform:uppercase;}
 .dg-txt{font-size:9px;line-height:1.5;color:var(--text2);}
 
-/* Price table */
 .base-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border);}
 .base-lbl{font-size:9px;letter-spacing:1px;color:var(--text2);text-transform:uppercase;}
 .base-val{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;}
@@ -143,22 +127,50 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .gpill{display:inline-block;padding:3px 7px;border-radius:4px;font-size:9px;font-weight:500;}
 .disclaimer{font-size:9px;color:var(--text3);margin-top:10px;line-height:1.8;}
 
-/* ── PSA 10 MAX VALUE BANNER ── */
-.max-banner{background:linear-gradient(135deg,rgba(232,185,35,0.15),rgba(255,215,0,0.08));border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
-.max-banner-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.max-banner-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.max-crown{font-size:14px;}
+/* PSA 10 banner */
+.max-banner{background:rgba(232,185,35,0.06);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.max-banner-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
 .max-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#FFD700;line-height:1;}
-.max-banner-sub{font-size:9px;color:var(--text2);line-height:1.7;}
-.max-vs{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--gold-border);}
+.max-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+.max-vs{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--gold-border);}
 .max-vs-item{flex:1;text-align:center;}
 .max-vs-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
-.max-vs-val{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;}
+.max-vs-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 .max-vs-div{color:var(--text3);font-size:10px;}
-.uplift-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:500;background:rgba(76,175,80,0.15);color:var(--green);border:0.5px solid rgba(76,175,80,0.3);margin-top:4px;}
+.uplift-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:500;background:var(--green-dim);color:var(--green);border:0.5px solid var(--green-border);margin-top:4px;}
 
-/* ── PORTFOLIO ── */
-.port-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+/* eBay banner */
+.ebay-banner{background:var(--green-dim);border:1px solid var(--green-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.ebay-banner-label{font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.ebay-live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.ebay-top-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--green);line-height:1;}
+.ebay-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+.ebay-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--green-border);}
+.ebay-stat-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
+.ebay-stat-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--green);line-height:1;}
+.ebay-loading{font-size:10px;color:var(--text2);display:flex;align-items:center;gap:6px;padding:6px 0;}
+.ebay-error{font-size:10px;color:var(--text3);padding:4px 0;line-height:1.8;}
+.ebay-link{font-size:9px;color:rgba(76,175,80,0.7);margin-top:8px;display:block;text-decoration:none;}
+.ebay-listings{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--green-border);}
+.ebay-listing-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid var(--border);}
+.ebay-listing-row:last-child{border-bottom:none;}
+.ebay-listing-title{font-size:9px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px;}
+.ebay-listing-price{font-size:10px;font-weight:500;color:var(--green);white-space:nowrap;}
+
+/* Portfolio */
+.grand-total{background:rgba(232,185,35,0.06);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:14px;}
+.gt-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.gt-val{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;color:#FFD700;line-height:1;margin-bottom:4px;}
+.gt-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+
+.three-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.tcol{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;}
+.tcol-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;line-height:1.4;}
+.tcol-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
+.tcol-sub{font-size:8px;color:var(--text3);margin-top:3px;}
+
+.port-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;}
 .stat-lbl{font-size:9px;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;}
 .stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1;}
@@ -177,10 +189,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .pcard-img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain;background:#080808;display:block;}
 .pcard-img-ph{width:100%;aspect-ratio:2.5/3.5;background:#080808;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1a1a1a;}
 .pcard-body{padding:9px 10px;}
-.pcard-name{font-size:10px;font-weight:500;line-height:1.4;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pcard-meta{display:flex;align-items:center;justify-content:space-between;}
-.pcard-grade{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;}
-.pcard-price{font-size:10px;color:var(--text2);}
+.pcard-name{font-size:10px;font-weight:500;line-height:1.4;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pcard-vals{display:flex;flex-direction:column;gap:4px;}
+.pval{display:flex;justify-content:space-between;align-items:center;gap:4px;}
+.pval-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
+.pval-num{font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;white-space:nowrap;}
 .pcard-badge{position:absolute;top:7px;right:7px;font-size:8px;font-weight:500;padding:2px 6px;border-radius:3px;letter-spacing:0.5px;}
 .pcard-del{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:5px;background:rgba(244,67,54,0.88);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
 
@@ -189,41 +202,20 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ep-text{font-size:11px;line-height:2.2;}
 .ep-cta{margin-top:16px;padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--gold-border);background:var(--gold-dim);color:var(--gold);display:inline-block;}
 
-/* ── PRICECHARTING MARKET BANNER ── */
-.market-banner{background:rgba(244,67,54,0.07);border:1px solid rgba(244,67,54,0.35);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
-.market-banner-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.market-banner-label{font-size:9px;letter-spacing:2px;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.market-live-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.4s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.market-top-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--red);line-height:1;}
-.market-sub{font-size:9px;color:var(--text2);line-height:1.7;margin-bottom:10px;}
-.market-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(244,67,54,0.25);}
-.mg-item{text-align:center;}
-.mg-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
-.mg-val{font-family:'Bebas Neue',sans-serif;font-size:16px;line-height:1;color:var(--red);}
-.market-loading{font-size:10px;color:var(--text2);display:flex;align-items:center;gap:6px;padding:4px 0;}
-.market-error{font-size:10px;color:var(--text3);padding:4px 0;line-height:1.7;}
-.pc-link{font-size:9px;color:rgba(244,67,54,0.7);margin-top:8px;display:block;text-decoration:none;}
-.pc-link:hover{color:var(--red);}
-
-/* ── TOAST ── */
 .toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(10px);background:#1c1c1c;color:var(--text);padding:10px 20px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;border:0.5px solid var(--gold-border);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- Header -->
   <div class="header">
     <div class="logo">POKE<em>SCAN</em></div>
     <div class="tag">AI GRADER</div>
   </div>
 
-  <!-- API Setup -->
-  <div class="api-card" id="api-card">
+  <div class="api-card">
     <h3>🔑 Setup Required</h3>
-    <p>Enter your Anthropic API key to enable AI card grading.<br>
+    <p>Enter your Anthropic API key to enable AI grading.<br>
     Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
     <div class="api-row">
       <input class="api-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false">
@@ -232,14 +224,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div id="api-saved" style="display:none;" class="api-saved">✓ Ready to grade!</div>
   </div>
 
-  <!-- SCANNER VIEW -->
+  <!-- SCANNER -->
   <div class="view active" id="view-scanner">
-
     <div class="card-name-wrap">
-      <input class="card-name-input" type="text" id="cname" placeholder="Card name (e.g. Charizard Base Set)..." autocorrect="off">
+      <input class="card-name-input" type="text" id="cname" placeholder="Card name (e.g. Charizard Base Set 1st Ed)..." autocorrect="off">
     </div>
-
-    <!-- Camera / image area -->
     <div class="cam-trigger" id="cam-trigger" onclick="triggerCapture()">
       <canvas id="annot-canvas"></canvas>
       <img id="card-preview" style="display:none">
@@ -248,7 +237,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <div class="ct-text">Tap to photograph your card</div>
         <div class="ct-sub">Uses your iPhone camera</div>
       </div>
-      <div class="scan-sweep" id="scan-sweep"></div>
+      <div class="scan-sweep"></div>
       <div class="scan-badge">SCANNING</div>
       <div class="corner-marker tl" id="cm-tl"></div>
       <div class="corner-marker tr" id="cm-tr"></div>
@@ -260,11 +249,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <div class="gs-lbl">PSA<br>GRADE</div>
       </div>
     </div>
-
-    <!-- Hidden file inputs — camera and library -->
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this.files[0])">
     <input type="file" id="library-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
-
     <div class="btn-row">
       <button class="btn" onclick="document.getElementById('library-input').click()">📁 Library</button>
       <button class="btn" onclick="clearAll()">Clear</button>
@@ -274,47 +260,49 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
       <button class="btn save" style="width:100%;padding:14px;" onclick="saveToPortfolio()">＋ Save to Portfolio</button>
     </div>
     <div class="status-bar" id="status">Tap the camera area or upload a photo to begin.</div>
-
-    <!-- Results -->
     <div class="results-section" id="results-section">
       <div class="rcard">
         <div class="rcard-hd"><span>Grade Analysis</span><span id="conf-tag" style="font-size:9px;"></span></div>
         <div class="rcard-bd" id="grade-panel"><div class="no-data">Scan a card to see<br>your grade analysis</div></div>
       </div>
       <div class="rcard">
-        <div class="rcard-hd">🔴 Live Market Data <span style="font-size:8px;color:var(--text3);">pricecharting.com</span></div>
-        <div class="rcard-bd" id="market-panel"><div class="no-data">Market prices will load<br>after grading</div></div>
+        <div class="rcard-hd">👑 PSA Price Guide</div>
+        <div class="rcard-bd" id="price-panel"><div class="no-data">PSA prices will appear<br>after grading</div></div>
       </div>
       <div class="rcard">
-        <div class="rcard-hd">PSA Price Guide</div>
-        <div class="rcard-bd" id="price-panel"><div class="no-data">Prices will appear<br>after grading</div></div>
+        <div class="rcard-hd">🟢 eBay Sold — PSA 10 <span style="font-size:8px;color:var(--text3);">live data</span></div>
+        <div class="rcard-bd" id="ebay-panel"><div class="no-data">eBay sold prices will<br>load after grading</div></div>
       </div>
     </div>
-
   </div>
 
-  <!-- PORTFOLIO VIEW -->
+  <!-- PORTFOLIO -->
   <div class="view" id="view-portfolio">
+    <div class="grand-total" id="grand-total-box" style="display:none;">
+      <div class="gt-label">🏆 Max Collection Value</div>
+      <div class="gt-val" id="gt-val">$0</div>
+      <div class="gt-sub">Best possible value per card across all 3 metrics</div>
+    </div>
+    <div class="three-cols" id="three-cols-box" style="display:none;">
+      <div class="tcol">
+        <div class="tcol-lbl">🟡 PSA Graded</div>
+        <div class="tcol-val" id="tc-psa" style="color:var(--gold)">$0</div>
+        <div class="tcol-sub">current grade</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-lbl">👑 PSA 10 Max</div>
+        <div class="tcol-val" id="tc-max" style="color:#FFD700">$0</div>
+        <div class="tcol-sub">if gem mint</div>
+      </div>
+      <div class="tcol">
+        <div class="tcol-lbl">🟢 eBay Sold</div>
+        <div class="tcol-val" id="tc-ebay" style="color:var(--green)">$0</div>
+        <div class="tcol-sub">highest sold</div>
+      </div>
+    </div>
     <div class="port-stats">
       <div class="stat-card"><div class="stat-lbl">Cards</div><div class="stat-val" id="stat-total">0</div><div class="stat-sub">in vault</div></div>
-      <div class="stat-card"><div class="stat-lbl">PSA Value</div><div class="stat-val" id="stat-psa" style="color:var(--gold)">$0</div><div class="stat-sub">graded est.</div></div>
-      <div class="stat-card"><div class="stat-lbl">Market Top</div><div class="stat-val" id="stat-market" style="color:var(--red)">$0</div><div class="stat-sub">pricecharting</div></div>
-      <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg">—</div><div class="stat-sub">PSA avg</div></div>
-    </div>
-    <!-- Max PSA 10 potential banner in portfolio -->
-    <div class="max-banner" id="port-max-banner" style="display:none;">
-      <div class="max-banner-top">
-        <div class="max-banner-label"><span class="max-crown">👑</span>Max PSA 10 Potential</div>
-      </div>
-      <div class="max-val" id="stat-max">$0</div>
-      <div class="max-banner-sub">Total vault value if every card graded PSA 10</div>
-      <div class="max-vs">
-        <div class="max-vs-item"><div class="max-vs-lbl">Current PSA</div><div class="max-vs-val" id="stat-psa2" style="color:var(--gold)">$0</div></div>
-        <div class="max-vs-div">→</div>
-        <div class="max-vs-item"><div class="max-vs-lbl">If All PSA 10</div><div class="max-vs-val" id="stat-max2" style="color:#FFD700">$0</div></div>
-        <div class="max-vs-div"></div>
-        <div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" id="stat-upside" style="color:var(--green)">$0</div></div>
-      </div>
+      <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg">—</div><div class="stat-sub">PSA average</div></div>
     </div>
     <div class="port-toolbar">
       <div class="filter-row">
@@ -328,16 +316,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <option value="newest">Newest first</option>
         <option value="grade-hi">Grade: high → low</option>
         <option value="grade-lo">Grade: low → high</option>
-        <option value="value-hi">Value: high → low</option>
+        <option value="value-hi">eBay value: high → low</option>
         <option value="name">Name A → Z</option>
       </select>
     </div>
     <div class="card-grid" id="card-grid"></div>
   </div>
-
 </div>
 
-<!-- Bottom Nav -->
 <div class="bottom-nav">
   <button class="bnav-item active" id="bnav-scanner" onclick="switchTab('scanner')">
     <div class="bnav-icon">◈</div>
@@ -348,22 +334,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div class="bnav-label">Portfolio <span id="port-count"></span></div>
   </button>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
 let apiKey = localStorage.getItem('pokescan_apikey') || '';
-let b64 = null;
-let lastResult = null;
-let lastImgSrc = null;
-let portfolio = [];
-let activeFilter = 'all';
-let activeSort = 'newest';
-
+let b64 = null, lastResult = null, lastImgSrc = null;
+let portfolio = [], activeFilter = 'all', activeSort = 'newest';
 try { portfolio = JSON.parse(localStorage.getItem('pokescan_portfolio') || '[]'); } catch(e) {}
 
-// ── Init ──
 window.onload = () => {
   if (apiKey) {
     document.getElementById('api-key-input').value = apiKey;
@@ -381,20 +359,16 @@ function saveApiKey() {
   showToast('✓ API key saved!');
 }
 
-// ── Tab switching ──
 function switchTab(t) {
   ['scanner','portfolio'].forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===t);
     document.getElementById('bnav-'+id).classList.toggle('active', id===t);
   });
-  if (t === 'portfolio') renderPortfolio();
+  if (t==='portfolio') renderPortfolio();
   window.scrollTo(0,0);
 }
 
-// ── Camera / file handling ──
-function triggerCapture() {
-  if (!b64) document.getElementById('camera-input').click();
-}
+function triggerCapture() { if (!b64) document.getElementById('camera-input').click(); }
 
 function handleFile(file) {
   if (!file) return;
@@ -403,8 +377,7 @@ function handleFile(file) {
     lastImgSrc = e.target.result;
     b64 = e.target.result.split(',')[1];
     const preview = document.getElementById('card-preview');
-    preview.src = e.target.result;
-    preview.style.display = 'block';
+    preview.src = e.target.result; preview.style.display = 'block';
     document.getElementById('ct-placeholder').style.display = 'none';
     document.getElementById('cam-trigger').classList.add('has-image');
     clearAnnotations();
@@ -420,8 +393,8 @@ function handleFile(file) {
 
 function clearAll() {
   b64 = null; lastResult = null; lastImgSrc = null;
-  const preview = document.getElementById('card-preview');
-  preview.style.display = 'none'; preview.src = '';
+  const p = document.getElementById('card-preview');
+  p.style.display = 'none'; p.src = '';
   document.getElementById('ct-placeholder').style.display = 'flex';
   document.getElementById('cam-trigger').classList.remove('has-image','show-markers','is-scanning');
   clearAnnotations();
@@ -430,17 +403,16 @@ function clearAll() {
   document.getElementById('btn-go').disabled = true;
   document.getElementById('status').textContent = 'Tap the camera area or upload a photo to begin.';
   document.getElementById('grade-panel').innerHTML = '<div class="no-data">Scan a card to see<br>your grade analysis</div>';
-  document.getElementById('market-panel').innerHTML = '<div class="no-data">Market prices will load<br>after grading</div>';
-  document.getElementById('price-panel').innerHTML = '<div class="no-data">Prices will appear<br>after grading</div>';
+  document.getElementById('price-panel').innerHTML = '<div class="no-data">PSA prices will appear<br>after grading</div>';
+  document.getElementById('ebay-panel').innerHTML = '<div class="no-data">eBay sold prices will<br>load after grading</div>';
   document.getElementById('conf-tag').textContent = '';
-  // Reset file inputs so same file can be reselected
   document.getElementById('camera-input').value = '';
   document.getElementById('library-input').value = '';
 }
 
 function clearAnnotations() {
   const canvas = document.getElementById('annot-canvas');
-  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
   ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id => {
     const el = document.getElementById(id);
     el.className = el.className.replace(/good|warn|bad/g,'').trim();
@@ -451,28 +423,21 @@ function clearAnnotations() {
 async function runGrade() {
   if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
   if (!b64) return;
-
   const btnGo = document.getElementById('btn-go');
   const statusEl = document.getElementById('status');
   const trigger = document.getElementById('cam-trigger');
-
-  btnGo.disabled = true;
-  btnGo.textContent = 'Grading...';
-  trigger.classList.add('is-scanning');
-  trigger.classList.remove('show-markers');
+  btnGo.disabled = true; btnGo.textContent = 'Grading...';
+  trigger.classList.add('is-scanning'); trigger.classList.remove('show-markers');
   clearAnnotations();
-  statusEl.innerHTML = '<span class="spinner"></span>Analyzing with AI vision...';
-
+  statusEl.innerHTML = '<span class="spinner"></span>Analyzing card + fetching eBay sold data...';
   const cardName = document.getElementById('cname').value.trim() || 'Pokémon card';
-
   try {
-    // Run Claude grading and PriceCharting fetch in parallel
-    const [r, mktData] = await Promise.all([
+    const [r, ebayData] = await Promise.all([
       callClaude(b64, cardName),
-      fetchMarketData(cardName)
+      fetchEbaySold(cardName)
     ]);
     lastResult = r;
-    lastResult.marketData = mktData;
+    lastResult.ebayData = ebayData;
     renderAnnotations(r);
     renderGrade(r, cardName);
     renderPrices(r);
@@ -483,75 +448,17 @@ async function runGrade() {
   } catch(e) {
     statusEl.textContent = '⚠ ' + (e.message || 'Analysis failed. Check your API key.');
   }
-
   trigger.classList.remove('is-scanning');
-  btnGo.disabled = false;
-  btnGo.textContent = 'Grade ▶';
+  btnGo.disabled = false; btnGo.textContent = 'Grade ▶';
 }
 
-// ── PriceCharting Market Data ──
-async function fetchMarketData(cardName) {
-  const marketPanel = document.getElementById('market-panel');
-  marketPanel.innerHTML = '<div class="market-loading"><span class="spinner"></span>Fetching live market data...</div>';
-  try {
-    const query = encodeURIComponent(cardName + ' pokemon card');
-    // Use allorigins proxy to bypass CORS
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.pricecharting.com/api/products?q=' + query + '&status=price')}`;
-    const resp = await fetch(proxyUrl);
-    const wrapper = await resp.json();
-    const data = JSON.parse(wrapper.contents);
-    const products = data.products || [];
-
-    if (!products.length) {
-      marketPanel.innerHTML = `<div class="market-error">No exact match found on PriceCharting.<br><a class="pc-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(cardName)}&type=pokemon" target="_blank">🔗 Search manually on PriceCharting</a></div>`;
-      return null;
-    }
-
-    // Find best match — prefer items with "pokemon" in category
-    const match = products.find(p => (p['console-name']||'').toLowerCase().includes('pokemon')) || products[0];
-
-    const loose   = parseFloat(match['loose-price']  || 0) / 100;
-    const graded  = parseFloat(match['graded-price'] || 0) / 100;
-    const manual  = parseFloat(match['manual-price'] || match['complete-price'] || 0) / 100;
-    const topVal  = Math.max(loose, graded, manual);
-    const avgSell = loose; // loose price = avg ungraded market sell price
-    const pcUrl   = `https://www.pricecharting.com${match['id'] ? '/game/pokemon/'+match['id'] : '/search-products?q='+encodeURIComponent(cardName)}`;
-
-    const mktData = { loose, graded, manual, topVal, avgSell, name: match['product-name'] || cardName, url: pcUrl };
-    renderMarketPanel(mktData);
-    return mktData;
-  } catch(e) {
-    marketPanel.innerHTML = `<div class="market-error">Could not load market data.<br>CORS or network issue.<br><a class="pc-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(cardName)}&type=pokemon" target="_blank">🔗 View on PriceCharting instead</a></div>`;
-    return null;
-  }
-}
-
-function renderMarketPanel(m) {
-  const fmt = v => v > 0 ? '$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
-  document.getElementById('market-panel').innerHTML = `
-    <div class="market-banner">
-      <div class="market-banner-top">
-        <div class="market-banner-label"><span class="market-live-dot"></span>Highest Sell Value</div>
-      </div>
-      <div class="market-top-val">${fmt(m.topVal)}</div>
-      <div class="market-sub">Top market price across all conditions on PriceCharting</div>
-      <div class="market-grid">
-        <div class="mg-item"><div class="mg-lbl">Avg Sell</div><div class="mg-val">${fmt(m.avgSell)}</div></div>
-        <div class="mg-item"><div class="mg-lbl">Graded</div><div class="mg-val">${fmt(m.graded)}</div></div>
-        <div class="mg-item"><div class="mg-lbl">Manual</div><div class="mg-val">${fmt(m.manual)}</div></div>
-      </div>
-    </div>
-    <div style="font-size:9px;color:var(--text3);line-height:1.7;">Match: ${m.name}</div>
-    <a class="pc-link" href="${m.url}" target="_blank">🔗 View full price history on PriceCharting</a>`;
-}
-
+// ── Claude ──
 async function callClaude(imgB64, cardName) {
   const prompt = `You are a professional PSA Pokémon card grader.
 Card: "${cardName}"
 Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %.
 Respond ONLY with valid JSON, no markdown:
 {"cardName":"name","set":"set if identifiable","overallGrade":8,"gradeName":"NM-MT","centering":7,"corners":8,"edges":8,"surface":9,"confidence":82,"centeringNote":"brief","cornersNote":"brief","edgesNote":"brief","surfaceNote":"brief","notes":"1-2 sentence summary","basePrice":25.00,"psaPrices":{"10":500,"9":200,"8":100,"7":60,"6":40,"5":30,"4":22,"3":18,"2":15,"1":12}}`;
-
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -561,23 +468,99 @@ Respond ONLY with valid JSON, no markdown:
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-5',
-      max_tokens: 1200,
+      model: 'claude-opus-4-5', max_tokens: 1200,
       messages: [{ role: 'user', content: [
         { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imgB64 } },
         { type: 'text', text: prompt }
       ]}]
     })
   });
-
   if (!resp.ok) {
     const err = await resp.json().catch(()=>({}));
     throw new Error(err?.error?.message || `API error ${resp.status}`);
   }
-
   const data = await resp.json();
   const text = (data.content||[]).map(b=>b.text||'').join('');
   return JSON.parse(text.replace(/```json|```/g,'').trim());
+}
+
+// ── eBay RSS ──
+async function fetchEbaySold(cardName) {
+  const panel = document.getElementById('ebay-panel');
+  panel.innerHTML = '<div class="ebay-loading"><span class="spinner"></span>Fetching eBay PSA 10 sold listings...</div>';
+  try {
+    const query = encodeURIComponent(cardName + ' pokemon PSA 10');
+    const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${query}&LH_Sold=1&LH_Complete=1&_rss=1`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(ebayUrl)}`;
+    const resp = await fetch(proxyUrl);
+    if (!resp.ok) throw new Error('proxy failed');
+    const wrapper = await resp.json();
+    const xml = wrapper.contents;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xml, 'text/xml');
+    const items = Array.from(doc.querySelectorAll('item'));
+    if (!items.length) { panel.innerHTML = ebayErrorHTML(cardName); return null; }
+
+    const listings = [];
+    for (const item of items.slice(0, 25)) {
+      const title = item.querySelector('title')?.textContent || '';
+      const desc  = item.querySelector('description')?.textContent || '';
+      const combined = desc + ' ' + title;
+      // Extract dollar amounts — prefer patterns like $123.45 or USD 123.45
+      const matches = [...combined.matchAll(/\$\s*([\d,]+(?:\.\d{2})?)/g)];
+      for (const m of matches) {
+        const price = parseFloat(m[1].replace(/,/g,''));
+        if (price >= 1 && price < 500000) {
+          listings.push({ title: title.replace(/<[^>]+>/g,'').trim().slice(0,60), price });
+          break;
+        }
+      }
+    }
+
+    if (!listings.length) { panel.innerHTML = ebayErrorHTML(cardName); return null; }
+
+    listings.sort((a,b) => b.price - a.price);
+    const highest = listings[0].price;
+    const avg = listings.reduce((s,l) => s+l.price, 0) / listings.length;
+    const lowest = listings[listings.length-1].price;
+    const count = listings.length;
+    const top5 = listings.slice(0,5);
+    const ebayData = { highest, avg, lowest, count, top5, cardName };
+    renderEbayPanel(ebayData);
+    return ebayData;
+  } catch(e) {
+    panel.innerHTML = ebayErrorHTML(cardName);
+    return null;
+  }
+}
+
+function ebayErrorHTML(cardName) {
+  const q = encodeURIComponent(cardName + ' pokemon PSA 10');
+  return `<div class="ebay-error">Could not auto-fetch eBay data. This can happen due to network restrictions.<br>
+    <a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 View PSA 10 sold listings on eBay →</a></div>`;
+}
+
+function renderEbayPanel(d) {
+  const fmt = v => '$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('ebay-panel').innerHTML = `
+    <div class="ebay-banner">
+      <div class="ebay-banner-label"><span class="ebay-live-dot"></span>Highest PSA 10 Sold</div>
+      <div class="ebay-top-val">${fmt(d.highest)}</div>
+      <div class="ebay-sub">From ${d.count} recent eBay PSA 10 sold listing${d.count!==1?'s':''}</div>
+      <div class="ebay-stats">
+        <div><div class="ebay-stat-lbl">Highest</div><div class="ebay-stat-val">${fmt(d.highest)}</div></div>
+        <div><div class="ebay-stat-lbl">Avg Sale</div><div class="ebay-stat-val">${fmt(d.avg)}</div></div>
+        <div><div class="ebay-stat-lbl">Lowest</div><div class="ebay-stat-val">${fmt(d.lowest)}</div></div>
+      </div>
+    </div>
+    <div class="ebay-listings">
+      ${d.top5.map(l=>`
+        <div class="ebay-listing-row">
+          <div class="ebay-listing-title">${l.title||'—'}</div>
+          <div class="ebay-listing-price">${fmt(l.price)}</div>
+        </div>`).join('')}
+    </div>
+    <a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(d.cardName+' pokemon PSA 10')}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 See all sold listings on eBay →</a>`;
 }
 
 // ── Colors ──
@@ -593,32 +576,26 @@ function renderAnnotations(r) {
   const ctx = canvas.getContext('2d');
   const rect = trigger.getBoundingClientRect();
   canvas.width = rect.width; canvas.height = rect.height;
-
   const cls = SCls(r.corners);
   ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id => {
     const el = document.getElementById(id);
     el.className = el.className.replace(/good|warn|bad/g,'').trim()+' '+cls;
   });
   document.getElementById('cg').style.borderColor = SC(r.centering);
-
-  const w=canvas.width, h=canvas.height, p=0.05;
-  const x0=w*p, y0=h*p, x1=w*(1-p), y1=h*(1-p);
+  const w=canvas.width,h=canvas.height,p=0.05;
+  const x0=w*p,y0=h*p,x1=w*(1-p),y1=h*(1-p);
   ctx.save();
-  ctx.strokeStyle=SC(r.edges); ctx.lineWidth=1.5; ctx.setLineDash([6,4]); ctx.globalAlpha=0.75;
+  ctx.strokeStyle=SC(r.edges);ctx.lineWidth=1.5;ctx.setLineDash([6,4]);ctx.globalAlpha=0.75;
   [[x0+16,y0,x1-16,y0],[x0+16,y1,x1-16,y1],[x0,y0+16,x0,y1-16],[x1,y0+16,x1,y1-16]].forEach(([ax,ay,bx,by])=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();});
   if (r.surface<8) {
-    ctx.setLineDash([]); ctx.fillStyle=SC(r.surface); ctx.globalAlpha=0.8;
-    ctx.beginPath(); ctx.arc(w*0.5,h*0.42,6,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1; ctx.globalAlpha=0.4; ctx.stroke();
+    ctx.setLineDash([]);ctx.fillStyle=SC(r.surface);ctx.globalAlpha=0.8;
+    ctx.beginPath();ctx.arc(w*0.5,h*0.42,6,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.globalAlpha=0.4;ctx.stroke();
   }
   ctx.restore();
   trigger.classList.add('show-markers');
-
-  const stamp = document.getElementById('grade-stamp');
-  const num = document.getElementById('gs-num');
-  num.textContent = r.overallGrade;
-  num.style.color = GC[r.overallGrade]||'#e8b923';
-  stamp.style.display = 'flex';
+  const stamp=document.getElementById('grade-stamp'),num=document.getElementById('gs-num');
+  num.textContent=r.overallGrade;num.style.color=GC[r.overallGrade]||'#e8b923';stamp.style.display='flex';
 }
 
 // ── Grade panel ──
@@ -640,62 +617,55 @@ function renderGrade(r, cardName) {
     </div>`;
 }
 
-// ── Price panel ──
+// ── PSA Price panel ──
 function renderPrices(r) {
-  const g=r.overallGrade, prices=r.psaPrices||{}, base=r.basePrice||0;
-  const psa10 = prices[10]||prices['10']||0;
-  const psaCur = prices[g]||prices[String(g)]||0;
-  const uplift = psa10 - psaCur;
-  const upliftPct = psaCur > 0 ? Math.round((uplift/psaCur)*100) : 0;
-  const isAlready10 = g === 10;
-
+  const g=r.overallGrade,prices=r.psaPrices||{},base=r.basePrice||0;
+  const psa10=prices[10]||prices['10']||0;
+  const psaCur=prices[g]||prices[String(g)]||0;
+  const uplift=psa10-psaCur;
+  const upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0;
+  const is10=g===10;
   const rows=[10,9,8,7,6,5,4,3,2,1].map(grade=>{
-    const price=prices[grade]||prices[String(grade)], isCur=grade===g, color=GC[grade];
-    const is10 = grade===10;
+    const price=prices[grade]||prices[String(grade)],isCur=grade===g,color=GC[grade];
     return `<tr class="${isCur?'cur':''}">
-      <td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${is10&&!isCur?' 👑':''}</td>
-      <td style="text-align:right;font-weight:${isCur||is10?500:400};color:${is10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td>
+      <td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${grade===10&&!isCur?' 👑':''}</td>
+      <td style="text-align:right;font-weight:${isCur||grade===10?500:400};color:${grade===10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td>
     </tr>`;
   }).join('');
-
   document.getElementById('price-panel').innerHTML=`
     <div class="max-banner">
-      <div class="max-banner-top">
-        <div class="max-banner-label"><span class="max-crown">👑</span>PSA 10 Max Value</div>
-      </div>
+      <div class="max-banner-label"><span>👑</span>PSA 10 Max Value</div>
       <div class="max-val">$${psa10?Number(psa10).toLocaleString():'—'}</div>
-      <div class="max-banner-sub">Maximum this card could be worth if graded PSA 10</div>
-      ${!isAlready10 && uplift > 0 ? `
-      <div class="max-vs">
-        <div class="max-vs-item"><div class="max-vs-lbl">Current Grade ${g}</div><div class="max-vs-val" style="color:${GC[g]}">$${Number(psaCur).toLocaleString()}</div></div>
+      <div class="max-sub">Maximum value if this card grades PSA 10</div>
+      ${!is10&&uplift>0?`<div class="max-vs">
+        <div class="max-vs-item"><div class="max-vs-lbl">Grade ${g}</div><div class="max-vs-val" style="color:${GC[g]}">$${Number(psaCur).toLocaleString()}</div></div>
         <div class="max-vs-div">→</div>
         <div class="max-vs-item"><div class="max-vs-lbl">PSA 10</div><div class="max-vs-val" style="color:#FFD700">$${Number(psa10).toLocaleString()}</div></div>
         <div class="max-vs-div"></div>
         <div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" style="color:var(--green)">+$${Number(uplift).toLocaleString()}</div><div class="uplift-badge">+${upliftPct}%</div></div>
-      </div>` : isAlready10 ? `<div style="font-size:10px;color:var(--green);margin-top:8px;">✓ Already at maximum grade!</div>` : ''}
+      </div>`:is10?`<div style="font-size:10px;color:var(--green);margin-top:8px;">✓ Already at maximum grade!</div>`:''}
     </div>
     <div class="base-row"><span class="base-lbl">Ungraded Market</span><span class="base-val">$${Number(base).toFixed(2)}</span></div>
     <table class="ptable"><thead><tr><th>PSA Grade</th><th style="text-align:right">Est. Value</th></tr></thead><tbody>${rows}</tbody></table>
-    <div class="disclaimer">* AI estimates. Verify on TCGPlayer or eBay for live pricing.</div>`;
+    <div class="disclaimer">* AI estimates. Verify on TCGPlayer or PSA for current data.</div>`;
 }
 
 // ── Portfolio ──
 function saveToPortfolio() {
   if (!lastResult) return;
-  const mkt = lastResult.marketData || {};
+  const prices=lastResult.psaPrices||{}, g=lastResult.overallGrade, eb=lastResult.ebayData||{};
   const entry = {
     id: Date.now(),
     cardName: lastResult.cardName || document.getElementById('cname').value.trim() || 'Unknown Card',
     set: lastResult.set || '',
-    overallGrade: lastResult.overallGrade,
-    gradeName: lastResult.gradeName || GN[lastResult.overallGrade],
+    overallGrade: g,
+    gradeName: lastResult.gradeName || GN[g],
     basePrice: lastResult.basePrice || 0,
-    psaPrice: (lastResult.psaPrices||{})[lastResult.overallGrade] || (lastResult.psaPrices||{})[String(lastResult.overallGrade)] || 0,
-    psa10Price: (lastResult.psaPrices||{})[10] || (lastResult.psaPrices||{})['10'] || 0,
-    marketTopVal: mkt.topVal || 0,
-    marketAvgSell: mkt.avgSell || 0,
-    marketGraded: mkt.graded || 0,
-    marketUrl: mkt.url || '',
+    psaPrice:   prices[g]  || prices[String(g)]  || 0,
+    psa10Price: prices[10] || prices['10'] || 0,
+    ebayHighest: eb.highest || 0,
+    ebayAvg:     eb.avg     || 0,
+    ebayCount:   eb.count   || 0,
     centering: lastResult.centering, corners: lastResult.corners,
     edges: lastResult.edges, surface: lastResult.surface,
     confidence: lastResult.confidence || 80,
@@ -707,102 +677,107 @@ function saveToPortfolio() {
   updatePortCount();
   showToast('✓ Saved to portfolio!');
   document.getElementById('save-row').style.display = 'none';
-  document.getElementById('status').textContent = '✓ Card saved! Scan another anytime.';
+  document.getElementById('status').textContent = '✓ Saved! Scan another card anytime.';
 }
 
 function deleteCard(id) {
   portfolio = portfolio.filter(c => c.id !== id);
   try { localStorage.setItem('pokescan_portfolio', JSON.stringify(portfolio)); } catch(e) {}
-  updatePortCount();
-  renderPortfolio();
-  showToast('Card removed.');
+  updatePortCount(); renderPortfolio(); showToast('Card removed.');
 }
 
 function updatePortCount() {
-  const el = document.getElementById('port-count');
-  el.textContent = portfolio.length ? `(${portfolio.length})` : '';
+  document.getElementById('port-count').textContent = portfolio.length ? `(${portfolio.length})` : '';
 }
 
 function setFilter(f, el) {
-  activeFilter = f;
-  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  activeFilter=f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderPortfolio();
 }
+function setSort(v) { activeSort=v; renderPortfolio(); }
 
-function setSort(v) { activeSort = v; renderPortfolio(); }
+const f$ = v => v>0 ? '$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}) : '—';
+const f$d = v => v>0 ? '$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
 
 function renderPortfolio() {
-  const total = portfolio.length;
-  const psaVal    = portfolio.reduce((s,c) => s+(Number(c.psaPrice)||0), 0);
-  const maxVal    = portfolio.reduce((s,c) => s+(Number(c.psa10Price)||Number(c.psaPrice)||0), 0);
-  const marketVal = portfolio.reduce((s,c) => s+(Number(c.marketTopVal)||0), 0);
-  const avgGrade  = total ? (portfolio.reduce((s,c) => s+c.overallGrade, 0)/total).toFixed(1) : '—';
-  const upside    = maxVal - psaVal;
+  const total      = portfolio.length;
+  const psaTotal   = portfolio.reduce((s,c)=>s+(Number(c.psaPrice)||0),0);
+  const max10Total = portfolio.reduce((s,c)=>s+(Number(c.psa10Price)||Number(c.psaPrice)||0),0);
+  const ebayTotal  = portfolio.reduce((s,c)=>s+(Number(c.ebayHighest)||0),0);
+  const avgGrade   = total ? (portfolio.reduce((s,c)=>s+c.overallGrade,0)/total).toFixed(1) : '—';
+  // Grand total = best value per card across all 3 metrics
+  const grandTotal = portfolio.reduce((s,c) => {
+    return s + Math.max(Number(c.psaPrice)||0, Number(c.psa10Price)||0, Number(c.ebayHighest)||0);
+  }, 0);
 
   document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-psa').textContent   = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  document.getElementById('stat-market').textContent = '$'+marketVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  document.getElementById('stat-avg').textContent   = avgGrade;
+  document.getElementById('stat-avg').textContent = avgGrade;
 
-  const maxBanner = document.getElementById('port-max-banner');
-  if (total > 0) {
-    maxBanner.style.display = 'block';
-    document.getElementById('stat-max').textContent  = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-    document.getElementById('stat-psa2').textContent = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-    document.getElementById('stat-max2').textContent = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-    document.getElementById('stat-upside').textContent = '+$'+upside.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  } else {
-    maxBanner.style.display = 'none';
+  const show = total > 0;
+  document.getElementById('grand-total-box').style.display = show ? 'block' : 'none';
+  document.getElementById('three-cols-box').style.display = show ? 'grid' : 'none';
+  if (show) {
+    document.getElementById('gt-val').textContent = f$(grandTotal);
+    document.getElementById('tc-psa').textContent  = f$(psaTotal);
+    document.getElementById('tc-max').textContent  = f$(max10Total);
+    document.getElementById('tc-ebay').textContent = f$(ebayTotal);
   }
 
   let cards = [...portfolio];
-  if (activeFilter==='gem') cards = cards.filter(c=>c.overallGrade===10);
-  else if (activeFilter==='mint') cards = cards.filter(c=>c.overallGrade===9);
-  else if (activeFilter==='mid') cards = cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
-  else if (activeFilter==='low') cards = cards.filter(c=>c.overallGrade<=4);
+  if (activeFilter==='gem')  cards=cards.filter(c=>c.overallGrade===10);
+  else if (activeFilter==='mint') cards=cards.filter(c=>c.overallGrade===9);
+  else if (activeFilter==='mid')  cards=cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
+  else if (activeFilter==='low')  cards=cards.filter(c=>c.overallGrade<=4);
   if (activeSort==='grade-hi') cards.sort((a,b)=>b.overallGrade-a.overallGrade);
   else if (activeSort==='grade-lo') cards.sort((a,b)=>a.overallGrade-b.overallGrade);
-  else if (activeSort==='value-hi') cards.sort((a,b)=>(b.psaPrice||0)-(a.psaPrice||0));
+  else if (activeSort==='value-hi') cards.sort((a,b)=>(b.ebayHighest||0)-(a.ebayHighest||0));
   else if (activeSort==='name') cards.sort((a,b)=>a.cardName.localeCompare(b.cardName));
 
   const grid = document.getElementById('card-grid');
   if (!portfolio.length) {
-    grid.innerHTML = `<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards yet.<br>Scan and grade cards to<br>build your vault.</div><button class="ep-cta" onclick="switchTab('scanner')">Go to Scanner ▶</button></div>`;
+    grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards yet.<br>Scan and grade cards to<br>build your vault.</div><button class="ep-cta" onclick="switchTab('scanner')">Go to Scanner ▶</button></div>`;
     return;
   }
   if (!cards.length) {
-    grid.innerHTML = `<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards match this filter.</div></div>`;
+    grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards match this filter.</div></div>`;
     return;
   }
+
   grid.innerHTML = cards.map(c => {
     const gc = GC[c.overallGrade]||'#e8b923';
-    const psaP   = c.psaPrice     ? '$'+Number(c.psaPrice).toLocaleString()     : '—';
-    const max10  = c.psa10Price   ? '$'+Number(c.psa10Price).toLocaleString()   : null;
-    const mktTop = c.marketTopVal ? '$'+Number(c.marketTopVal).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : null;
-    const imgEl  = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
+    const imgEl = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
     return `<div class="pcard">
       ${imgEl}
       <button class="pcard-del" onclick="deleteCard(${c.id})" title="Remove">✕</button>
       <div class="pcard-badge" style="background:${gc}22;color:${gc};border:0.5px solid ${gc}55">${c.gradeName||GN[c.overallGrade]}</div>
       <div class="pcard-body">
         <div class="pcard-name" title="${c.cardName}">${c.cardName}</div>
-        <div class="pcard-meta">
-          <div class="pcard-grade" style="color:${gc}">PSA ${c.overallGrade}</div>
-          <div class="pcard-price">${psaP}</div>
+        <div class="pcard-vals">
+          <div class="pval">
+            <div class="pval-lbl">🟡 PSA ${c.overallGrade}</div>
+            <div class="pval-num" style="color:${gc}">${f$(c.psaPrice)}</div>
+          </div>
+          <div class="pval">
+            <div class="pval-lbl">👑 PSA 10</div>
+            <div class="pval-num" style="color:#FFD700">${f$(c.psa10Price)}</div>
+          </div>
+          <div class="pval">
+            <div class="pval-lbl">🟢 eBay sold</div>
+            <div class="pval-num" style="color:var(--green)">${f$d(c.ebayHighest)}</div>
+          </div>
         </div>
-        ${mktTop ? `<div style="font-size:9px;color:var(--red);margin-top:3px;display:flex;align-items:center;gap:3px;"><span>🔴</span><span>${mktTop} market top</span></div>` : ''}
-        ${max10 && c.overallGrade < 10 ? `<div style="font-size:9px;color:#FFD700;margin-top:2px;display:flex;align-items:center;gap:3px;"><span>👑</span><span>${max10} if PSA 10</span></div>` : ''}
-        ${c.set ? `<div style="font-size:9px;color:var(--text3);margin-top:2px;">${c.set}</div>` : ''}
+        ${c.set?`<div style="font-size:9px;color:var(--text3);margin-top:4px;">${c.set}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 </script>
 </body>
