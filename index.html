@@ -189,6 +189,23 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ep-text{font-size:11px;line-height:2.2;}
 .ep-cta{margin-top:16px;padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--gold-border);background:var(--gold-dim);color:var(--gold);display:inline-block;}
 
+/* ── PRICECHARTING MARKET BANNER ── */
+.market-banner{background:rgba(244,67,54,0.07);border:1px solid rgba(244,67,54,0.35);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.market-banner-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.market-banner-label{font-size:9px;letter-spacing:2px;color:var(--red);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.market-live-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.market-top-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--red);line-height:1;}
+.market-sub{font-size:9px;color:var(--text2);line-height:1.7;margin-bottom:10px;}
+.market-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(244,67,54,0.25);}
+.mg-item{text-align:center;}
+.mg-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
+.mg-val{font-family:'Bebas Neue',sans-serif;font-size:16px;line-height:1;color:var(--red);}
+.market-loading{font-size:10px;color:var(--text2);display:flex;align-items:center;gap:6px;padding:4px 0;}
+.market-error{font-size:10px;color:var(--text3);padding:4px 0;line-height:1.7;}
+.pc-link{font-size:9px;color:rgba(244,67,54,0.7);margin-top:8px;display:block;text-decoration:none;}
+.pc-link:hover{color:var(--red);}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(10px);background:#1c1c1c;color:var(--text);padding:10px 20px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;border:0.5px solid var(--gold-border);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -265,6 +282,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <div class="rcard-bd" id="grade-panel"><div class="no-data">Scan a card to see<br>your grade analysis</div></div>
       </div>
       <div class="rcard">
+        <div class="rcard-hd">🔴 Live Market Data <span style="font-size:8px;color:var(--text3);">pricecharting.com</span></div>
+        <div class="rcard-bd" id="market-panel"><div class="no-data">Market prices will load<br>after grading</div></div>
+      </div>
+      <div class="rcard">
         <div class="rcard-hd">PSA Price Guide</div>
         <div class="rcard-bd" id="price-panel"><div class="no-data">Prices will appear<br>after grading</div></div>
       </div>
@@ -277,7 +298,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div class="port-stats">
       <div class="stat-card"><div class="stat-lbl">Cards</div><div class="stat-val" id="stat-total">0</div><div class="stat-sub">in vault</div></div>
       <div class="stat-card"><div class="stat-lbl">PSA Value</div><div class="stat-val" id="stat-psa" style="color:var(--gold)">$0</div><div class="stat-sub">graded est.</div></div>
-      <div class="stat-card"><div class="stat-lbl">Raw Value</div><div class="stat-val" id="stat-raw">$0</div><div class="stat-sub">ungraded</div></div>
+      <div class="stat-card"><div class="stat-lbl">Market Top</div><div class="stat-val" id="stat-market" style="color:var(--red)">$0</div><div class="stat-sub">pricecharting</div></div>
       <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg">—</div><div class="stat-sub">PSA avg</div></div>
     </div>
     <!-- Max PSA 10 potential banner in portfolio -->
@@ -409,6 +430,7 @@ function clearAll() {
   document.getElementById('btn-go').disabled = true;
   document.getElementById('status').textContent = 'Tap the camera area or upload a photo to begin.';
   document.getElementById('grade-panel').innerHTML = '<div class="no-data">Scan a card to see<br>your grade analysis</div>';
+  document.getElementById('market-panel').innerHTML = '<div class="no-data">Market prices will load<br>after grading</div>';
   document.getElementById('price-panel').innerHTML = '<div class="no-data">Prices will appear<br>after grading</div>';
   document.getElementById('conf-tag').textContent = '';
   // Reset file inputs so same file can be reselected
@@ -444,15 +466,19 @@ async function runGrade() {
   const cardName = document.getElementById('cname').value.trim() || 'Pokémon card';
 
   try {
-    const r = await callClaude(b64, cardName);
+    // Run Claude grading and PriceCharting fetch in parallel
+    const [r, mktData] = await Promise.all([
+      callClaude(b64, cardName),
+      fetchMarketData(cardName)
+    ]);
     lastResult = r;
+    lastResult.marketData = mktData;
     renderAnnotations(r);
     renderGrade(r, cardName);
     renderPrices(r);
     document.getElementById('save-row').style.display = 'block';
     document.getElementById('conf-tag').textContent = `${r.confidence||85}% confidence`;
     statusEl.textContent = '✓ Done! Save to Portfolio to track this card.';
-    // Scroll to results
     setTimeout(() => document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}), 300);
   } catch(e) {
     statusEl.textContent = '⚠ ' + (e.message || 'Analysis failed. Check your API key.');
@@ -463,7 +489,61 @@ async function runGrade() {
   btnGo.textContent = 'Grade ▶';
 }
 
-async function callClaude(imgB64, cardName) {
+// ── PriceCharting Market Data ──
+async function fetchMarketData(cardName) {
+  const marketPanel = document.getElementById('market-panel');
+  marketPanel.innerHTML = '<div class="market-loading"><span class="spinner"></span>Fetching live market data...</div>';
+  try {
+    const query = encodeURIComponent(cardName + ' pokemon card');
+    // Use allorigins proxy to bypass CORS
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.pricecharting.com/api/products?q=' + query + '&status=price')}`;
+    const resp = await fetch(proxyUrl);
+    const wrapper = await resp.json();
+    const data = JSON.parse(wrapper.contents);
+    const products = data.products || [];
+
+    if (!products.length) {
+      marketPanel.innerHTML = `<div class="market-error">No exact match found on PriceCharting.<br><a class="pc-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(cardName)}&type=pokemon" target="_blank">🔗 Search manually on PriceCharting</a></div>`;
+      return null;
+    }
+
+    // Find best match — prefer items with "pokemon" in category
+    const match = products.find(p => (p['console-name']||'').toLowerCase().includes('pokemon')) || products[0];
+
+    const loose   = parseFloat(match['loose-price']  || 0) / 100;
+    const graded  = parseFloat(match['graded-price'] || 0) / 100;
+    const manual  = parseFloat(match['manual-price'] || match['complete-price'] || 0) / 100;
+    const topVal  = Math.max(loose, graded, manual);
+    const avgSell = loose; // loose price = avg ungraded market sell price
+    const pcUrl   = `https://www.pricecharting.com${match['id'] ? '/game/pokemon/'+match['id'] : '/search-products?q='+encodeURIComponent(cardName)}`;
+
+    const mktData = { loose, graded, manual, topVal, avgSell, name: match['product-name'] || cardName, url: pcUrl };
+    renderMarketPanel(mktData);
+    return mktData;
+  } catch(e) {
+    marketPanel.innerHTML = `<div class="market-error">Could not load market data.<br>CORS or network issue.<br><a class="pc-link" href="https://www.pricecharting.com/search-products?q=${encodeURIComponent(cardName)}&type=pokemon" target="_blank">🔗 View on PriceCharting instead</a></div>`;
+    return null;
+  }
+}
+
+function renderMarketPanel(m) {
+  const fmt = v => v > 0 ? '$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+  document.getElementById('market-panel').innerHTML = `
+    <div class="market-banner">
+      <div class="market-banner-top">
+        <div class="market-banner-label"><span class="market-live-dot"></span>Highest Sell Value</div>
+      </div>
+      <div class="market-top-val">${fmt(m.topVal)}</div>
+      <div class="market-sub">Top market price across all conditions on PriceCharting</div>
+      <div class="market-grid">
+        <div class="mg-item"><div class="mg-lbl">Avg Sell</div><div class="mg-val">${fmt(m.avgSell)}</div></div>
+        <div class="mg-item"><div class="mg-lbl">Graded</div><div class="mg-val">${fmt(m.graded)}</div></div>
+        <div class="mg-item"><div class="mg-lbl">Manual</div><div class="mg-val">${fmt(m.manual)}</div></div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:var(--text3);line-height:1.7;">Match: ${m.name}</div>
+    <a class="pc-link" href="${m.url}" target="_blank">🔗 View full price history on PriceCharting</a>`;
+}
   const prompt = `You are a professional PSA Pokémon card grader.
 Card: "${cardName}"
 Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %.
@@ -600,6 +680,7 @@ function renderPrices(r) {
 // ── Portfolio ──
 function saveToPortfolio() {
   if (!lastResult) return;
+  const mkt = lastResult.marketData || {};
   const entry = {
     id: Date.now(),
     cardName: lastResult.cardName || document.getElementById('cname').value.trim() || 'Unknown Card',
@@ -609,6 +690,10 @@ function saveToPortfolio() {
     basePrice: lastResult.basePrice || 0,
     psaPrice: (lastResult.psaPrices||{})[lastResult.overallGrade] || (lastResult.psaPrices||{})[String(lastResult.overallGrade)] || 0,
     psa10Price: (lastResult.psaPrices||{})[10] || (lastResult.psaPrices||{})['10'] || 0,
+    marketTopVal: mkt.topVal || 0,
+    marketAvgSell: mkt.avgSell || 0,
+    marketGraded: mkt.graded || 0,
+    marketUrl: mkt.url || '',
     centering: lastResult.centering, corners: lastResult.corners,
     edges: lastResult.edges, surface: lastResult.surface,
     confidence: lastResult.confidence || 80,
@@ -647,21 +732,21 @@ function setSort(v) { activeSort = v; renderPortfolio(); }
 
 function renderPortfolio() {
   const total = portfolio.length;
-  const psaVal = portfolio.reduce((s,c) => s+(Number(c.psaPrice)||0), 0);
-  const rawVal = portfolio.reduce((s,c) => s+(Number(c.basePrice)||0), 0);
-  const maxVal = portfolio.reduce((s,c) => s+(Number(c.psa10Price)||Number(c.psaPrice)||0), 0);
-  const avgGrade = total ? (portfolio.reduce((s,c) => s+c.overallGrade, 0)/total).toFixed(1) : '—';
-  const upside = maxVal - psaVal;
+  const psaVal    = portfolio.reduce((s,c) => s+(Number(c.psaPrice)||0), 0);
+  const maxVal    = portfolio.reduce((s,c) => s+(Number(c.psa10Price)||Number(c.psaPrice)||0), 0);
+  const marketVal = portfolio.reduce((s,c) => s+(Number(c.marketTopVal)||0), 0);
+  const avgGrade  = total ? (portfolio.reduce((s,c) => s+c.overallGrade, 0)/total).toFixed(1) : '—';
+  const upside    = maxVal - psaVal;
 
   document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-psa').textContent = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  document.getElementById('stat-raw').textContent = '$'+rawVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
-  document.getElementById('stat-avg').textContent = avgGrade;
+  document.getElementById('stat-psa').textContent   = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('stat-market').textContent = '$'+marketVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+  document.getElementById('stat-avg').textContent   = avgGrade;
 
   const maxBanner = document.getElementById('port-max-banner');
   if (total > 0) {
     maxBanner.style.display = 'block';
-    document.getElementById('stat-max').textContent = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('stat-max').textContent  = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
     document.getElementById('stat-psa2').textContent = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
     document.getElementById('stat-max2').textContent = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
     document.getElementById('stat-upside').textContent = '+$'+upside.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -690,9 +775,10 @@ function renderPortfolio() {
   }
   grid.innerHTML = cards.map(c => {
     const gc = GC[c.overallGrade]||'#e8b923';
-    const psaP = c.psaPrice ? '$'+Number(c.psaPrice).toLocaleString() : '—';
-    const max10 = c.psa10Price ? '$'+Number(c.psa10Price).toLocaleString() : null;
-    const imgEl = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
+    const psaP   = c.psaPrice     ? '$'+Number(c.psaPrice).toLocaleString()     : '—';
+    const max10  = c.psa10Price   ? '$'+Number(c.psa10Price).toLocaleString()   : null;
+    const mktTop = c.marketTopVal ? '$'+Number(c.marketTopVal).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : null;
+    const imgEl  = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
     return `<div class="pcard">
       ${imgEl}
       <button class="pcard-del" onclick="deleteCard(${c.id})" title="Remove">✕</button>
@@ -703,8 +789,9 @@ function renderPortfolio() {
           <div class="pcard-grade" style="color:${gc}">PSA ${c.overallGrade}</div>
           <div class="pcard-price">${psaP}</div>
         </div>
-        ${max10 && c.overallGrade < 10 ? `<div style="font-size:9px;color:#FFD700;margin-top:3px;display:flex;align-items:center;gap:3px;"><span>👑</span><span>${max10} if PSA 10</span></div>` : ''}
-        ${c.set?`<div style="font-size:9px;color:var(--text3);margin-top:2px;">${c.set}</div>`:''}
+        ${mktTop ? `<div style="font-size:9px;color:var(--red);margin-top:3px;display:flex;align-items:center;gap:3px;"><span>🔴</span><span>${mktTop} market top</span></div>` : ''}
+        ${max10 && c.overallGrade < 10 ? `<div style="font-size:9px;color:#FFD700;margin-top:2px;display:flex;align-items:center;gap:3px;"><span>👑</span><span>${max10} if PSA 10</span></div>` : ''}
+        ${c.set ? `<div style="font-size:9px;color:var(--text3);margin-top:2px;">${c.set}</div>` : ''}
       </div>
     </div>`;
   }).join('');
