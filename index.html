@@ -143,6 +143,20 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .gpill{display:inline-block;padding:3px 7px;border-radius:4px;font-size:9px;font-weight:500;}
 .disclaimer{font-size:9px;color:var(--text3);margin-top:10px;line-height:1.8;}
 
+/* ── PSA 10 MAX VALUE BANNER ── */
+.max-banner{background:linear-gradient(135deg,rgba(232,185,35,0.15),rgba(255,215,0,0.08));border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.max-banner-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.max-banner-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.max-crown{font-size:14px;}
+.max-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#FFD700;line-height:1;}
+.max-banner-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+.max-vs{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--gold-border);}
+.max-vs-item{flex:1;text-align:center;}
+.max-vs-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
+.max-vs-val{font-family:'Bebas Neue',sans-serif;font-size:18px;line-height:1;}
+.max-vs-div{color:var(--text3);font-size:10px;}
+.uplift-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:500;background:rgba(76,175,80,0.15);color:var(--green);border:0.5px solid rgba(76,175,80,0.3);margin-top:4px;}
+
 /* ── PORTFOLIO ── */
 .port-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
 .stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;}
@@ -265,6 +279,21 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
       <div class="stat-card"><div class="stat-lbl">PSA Value</div><div class="stat-val" id="stat-psa" style="color:var(--gold)">$0</div><div class="stat-sub">graded est.</div></div>
       <div class="stat-card"><div class="stat-lbl">Raw Value</div><div class="stat-val" id="stat-raw">$0</div><div class="stat-sub">ungraded</div></div>
       <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg">—</div><div class="stat-sub">PSA avg</div></div>
+    </div>
+    <!-- Max PSA 10 potential banner in portfolio -->
+    <div class="max-banner" id="port-max-banner" style="display:none;">
+      <div class="max-banner-top">
+        <div class="max-banner-label"><span class="max-crown">👑</span>Max PSA 10 Potential</div>
+      </div>
+      <div class="max-val" id="stat-max">$0</div>
+      <div class="max-banner-sub">Total vault value if every card graded PSA 10</div>
+      <div class="max-vs">
+        <div class="max-vs-item"><div class="max-vs-lbl">Current PSA</div><div class="max-vs-val" id="stat-psa2" style="color:var(--gold)">$0</div></div>
+        <div class="max-vs-div">→</div>
+        <div class="max-vs-item"><div class="max-vs-lbl">If All PSA 10</div><div class="max-vs-val" id="stat-max2" style="color:#FFD700">$0</div></div>
+        <div class="max-vs-div"></div>
+        <div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" id="stat-upside" style="color:var(--green)">$0</div></div>
+      </div>
     </div>
     <div class="port-toolbar">
       <div class="filter-row">
@@ -532,11 +561,37 @@ function renderGrade(r, cardName) {
 // ── Price panel ──
 function renderPrices(r) {
   const g=r.overallGrade, prices=r.psaPrices||{}, base=r.basePrice||0;
+  const psa10 = prices[10]||prices['10']||0;
+  const psaCur = prices[g]||prices[String(g)]||0;
+  const uplift = psa10 - psaCur;
+  const upliftPct = psaCur > 0 ? Math.round((uplift/psaCur)*100) : 0;
+  const isAlready10 = g === 10;
+
   const rows=[10,9,8,7,6,5,4,3,2,1].map(grade=>{
     const price=prices[grade]||prices[String(grade)], isCur=grade===g, color=GC[grade];
-    return `<tr class="${isCur?'cur':''}"><td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}</td><td style="text-align:right;font-weight:${isCur?500:400}">$${price?Number(price).toLocaleString():'—'}</td></tr>`;
+    const is10 = grade===10;
+    return `<tr class="${isCur?'cur':''}">
+      <td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${is10&&!isCur?' 👑':''}</td>
+      <td style="text-align:right;font-weight:${isCur||is10?500:400};color:${is10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td>
+    </tr>`;
   }).join('');
+
   document.getElementById('price-panel').innerHTML=`
+    <div class="max-banner">
+      <div class="max-banner-top">
+        <div class="max-banner-label"><span class="max-crown">👑</span>PSA 10 Max Value</div>
+      </div>
+      <div class="max-val">$${psa10?Number(psa10).toLocaleString():'—'}</div>
+      <div class="max-banner-sub">Maximum this card could be worth if graded PSA 10</div>
+      ${!isAlready10 && uplift > 0 ? `
+      <div class="max-vs">
+        <div class="max-vs-item"><div class="max-vs-lbl">Current Grade ${g}</div><div class="max-vs-val" style="color:${GC[g]}">$${Number(psaCur).toLocaleString()}</div></div>
+        <div class="max-vs-div">→</div>
+        <div class="max-vs-item"><div class="max-vs-lbl">PSA 10</div><div class="max-vs-val" style="color:#FFD700">$${Number(psa10).toLocaleString()}</div></div>
+        <div class="max-vs-div"></div>
+        <div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" style="color:var(--green)">+$${Number(uplift).toLocaleString()}</div><div class="uplift-badge">+${upliftPct}%</div></div>
+      </div>` : isAlready10 ? `<div style="font-size:10px;color:var(--green);margin-top:8px;">✓ Already at maximum grade!</div>` : ''}
+    </div>
     <div class="base-row"><span class="base-lbl">Ungraded Market</span><span class="base-val">$${Number(base).toFixed(2)}</span></div>
     <table class="ptable"><thead><tr><th>PSA Grade</th><th style="text-align:right">Est. Value</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="disclaimer">* AI estimates. Verify on TCGPlayer or eBay for live pricing.</div>`;
@@ -553,6 +608,7 @@ function saveToPortfolio() {
     gradeName: lastResult.gradeName || GN[lastResult.overallGrade],
     basePrice: lastResult.basePrice || 0,
     psaPrice: (lastResult.psaPrices||{})[lastResult.overallGrade] || (lastResult.psaPrices||{})[String(lastResult.overallGrade)] || 0,
+    psa10Price: (lastResult.psaPrices||{})[10] || (lastResult.psaPrices||{})['10'] || 0,
     centering: lastResult.centering, corners: lastResult.corners,
     edges: lastResult.edges, surface: lastResult.surface,
     confidence: lastResult.confidence || 80,
@@ -593,11 +649,25 @@ function renderPortfolio() {
   const total = portfolio.length;
   const psaVal = portfolio.reduce((s,c) => s+(Number(c.psaPrice)||0), 0);
   const rawVal = portfolio.reduce((s,c) => s+(Number(c.basePrice)||0), 0);
+  const maxVal = portfolio.reduce((s,c) => s+(Number(c.psa10Price)||Number(c.psaPrice)||0), 0);
   const avgGrade = total ? (portfolio.reduce((s,c) => s+c.overallGrade, 0)/total).toFixed(1) : '—';
+  const upside = maxVal - psaVal;
+
   document.getElementById('stat-total').textContent = total;
   document.getElementById('stat-psa').textContent = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
   document.getElementById('stat-raw').textContent = '$'+rawVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
   document.getElementById('stat-avg').textContent = avgGrade;
+
+  const maxBanner = document.getElementById('port-max-banner');
+  if (total > 0) {
+    maxBanner.style.display = 'block';
+    document.getElementById('stat-max').textContent = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('stat-psa2').textContent = '$'+psaVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('stat-max2').textContent = '$'+maxVal.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+    document.getElementById('stat-upside').textContent = '+$'+upside.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+  } else {
+    maxBanner.style.display = 'none';
+  }
 
   let cards = [...portfolio];
   if (activeFilter==='gem') cards = cards.filter(c=>c.overallGrade===10);
@@ -621,6 +691,7 @@ function renderPortfolio() {
   grid.innerHTML = cards.map(c => {
     const gc = GC[c.overallGrade]||'#e8b923';
     const psaP = c.psaPrice ? '$'+Number(c.psaPrice).toLocaleString() : '—';
+    const max10 = c.psa10Price ? '$'+Number(c.psa10Price).toLocaleString() : null;
     const imgEl = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
     return `<div class="pcard">
       ${imgEl}
@@ -632,6 +703,7 @@ function renderPortfolio() {
           <div class="pcard-grade" style="color:${gc}">PSA ${c.overallGrade}</div>
           <div class="pcard-price">${psaP}</div>
         </div>
+        ${max10 && c.overallGrade < 10 ? `<div style="font-size:9px;color:#FFD700;margin-top:3px;display:flex;align-items:center;gap:3px;"><span>👑</span><span>${max10} if PSA 10</span></div>` : ''}
         ${c.set?`<div style="font-size:9px;color:var(--text3);margin-top:2px;">${c.set}</div>`:''}
       </div>
     </div>`;
