@@ -1,0 +1,21 @@
+{
+  "name": "PokéScan — AI Card Grader",
+  "short_name": "PokéScan",
+  "description": "AI-powered Pokémon card grader with PSA valuation and eBay market data",
+  "start_url": "/pokescan/",
+  "scope": "/pokescan/",
+  "display": "standalone",
+  "background_color": "#0c0c0c",
+  "theme_color": "#0c0c0c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%230c0c0c'/%3E%3Ccircle cx='256' cy='256' r='160' fill='none' stroke='%23e8b923' stroke-width='24'/%3E%3Cline x1='96' y1='256' x2='416' y2='256' stroke='%23e8b923' stroke-width='24'/%3E%3Ccircle cx='256' cy='256' r='40' fill='%23e8b923'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "entertainment"],
+  "prefer_related_applications": false
+}
