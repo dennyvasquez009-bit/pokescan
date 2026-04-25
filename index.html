@@ -6,13 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0f0f0f">
+<link rel="manifest" href="manifest.json">
 <title>PokéScan</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --gold:#e8b923;--gold-dim:rgba(232,185,35,0.12);--gold-border:rgba(232,185,35,0.35);
-  --bg:#0c0c0c;--bg2:#161616;--bg3:#202020;
+  --bg:#0c0c0c;--bg2:#161616;--bg3:#202020;--bg4:#252525;
   --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
   --text:#ece8df;--text2:#888;--text3:#444;
   --green:#4caf50;--green-dim:rgba(76,175,80,0.09);--green-border:rgba(76,175,80,0.35);
@@ -22,12 +23,14 @@
 html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;}
 .app{max-width:480px;margin:0 auto;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 90px);}
 
+/* ── HEADER ── */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;}
 .logo em{color:var(--gold);font-style:normal;}
 .tag{font-size:8px;letter-spacing:2px;color:var(--text2);border:0.5px solid var(--border2);padding:4px 9px;border-radius:3px;}
 
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);padding:10px 0 calc(var(--safe-bot) + 10px);display:flex;justify-content:space-around;z-index:100;}
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);padding:10px 0 calc(var(--safe-bot) + 10px);display:flex;justify-content:space-around;z-index:100;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 20px;cursor:pointer;color:var(--text3);transition:color 0.15s;border:none;background:none;}
 .bnav-item.active{color:var(--gold);}
 .bnav-icon{font-size:20px;line-height:1;}
@@ -35,6 +38,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 
 .view{display:none;}.view.active{display:block;}
 
+/* ── API SETUP ── */
 .api-card{background:var(--bg2);border:1px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:18px;}
 .api-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;}
 .api-card p{font-size:10px;color:var(--text2);line-height:1.9;margin-bottom:12px;}
@@ -45,10 +49,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .api-btn{padding:11px 16px;background:var(--gold);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:#1a1000;cursor:pointer;white-space:nowrap;}
 .api-saved{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--green);margin-top:8px;}
 
+/* ── SCANNER ── */
 .card-name-wrap{margin-bottom:14px;}
 .card-name-input{width:100%;padding:12px 14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;}
 .card-name-input:focus{border-color:var(--gold);}
-
 .cam-trigger{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1.5px dashed var(--border2);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;position:relative;overflow:hidden;transition:border-color 0.2s;}
 .cam-trigger:active{opacity:0.85;}
 .cam-trigger.has-image{border-style:solid;border-color:var(--border);}
@@ -58,7 +62,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ct-icon{font-size:52px;line-height:1;opacity:0.25;}
 .ct-text{font-size:11px;color:var(--text3);text-align:center;line-height:1.9;}
 .ct-sub{font-size:10px;color:var(--text3);opacity:0.6;margin-top:2px;}
-
 .corner-marker{position:absolute;width:20px;height:20px;pointer-events:none;opacity:0;transition:opacity 0.4s;}
 .corner-marker.tl{top:5%;left:3%;border-top:2.5px solid;border-left:2.5px solid;border-radius:3px 0 0 0;}
 .corner-marker.tr{top:5%;right:3%;border-top:2.5px solid;border-right:2.5px solid;border-radius:0 3px 0 0;}
@@ -76,6 +79,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .scan-badge{position:absolute;top:12px;right:12px;background:rgba(232,185,35,0.92);color:#1a1000;font-size:9px;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none;}
 .is-scanning .scan-badge{display:block;}
 
+/* ── BUTTONS ── */
 .btn-row{display:flex;gap:10px;margin-top:12px;}
 .btn{flex:1;padding:14px;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);transition:all 0.15s;-webkit-appearance:none;}
 .btn:active{opacity:0.75;transform:scale(0.98);}
@@ -86,12 +90,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .spinner{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:5px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* ── RESULT PANELS ── */
 .results-section{margin-top:16px;display:flex;flex-direction:column;gap:12px;}
 .rcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;}
 .rcard-hd{padding:10px 14px;border-bottom:0.5px solid var(--border);font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
 .rcard-bd{padding:14px;}
 .no-data{text-align:center;color:var(--text3);font-size:11px;padding:20px 10px;line-height:2;}
-
 .grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
 .grade-ring{width:66px;height:66px;border-radius:50%;border:2.5px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
 .gr-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
@@ -114,7 +118,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .dg-item{background:var(--bg3);border-radius:8px;padding:8px 9px;}
 .dg-lbl{font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;text-transform:uppercase;}
 .dg-txt{font-size:9px;line-height:1.5;color:var(--text2);}
-
 .base-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border);}
 .base-lbl{font-size:9px;letter-spacing:1px;color:var(--text2);text-transform:uppercase;}
 .base-val{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;}
@@ -158,24 +161,21 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ebay-listing-title{font-size:9px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px;}
 .ebay-listing-price{font-size:10px;font-weight:500;color:var(--green);white-space:nowrap;}
 
-/* Portfolio */
+/* ── PORTFOLIO ── */
 .grand-total{background:rgba(232,185,35,0.06);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:14px;}
 .gt-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
 .gt-val{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;color:#FFD700;line-height:1;margin-bottom:4px;}
 .gt-sub{font-size:9px;color:var(--text2);line-height:1.7;}
-
 .three-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
 .tcol{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;}
 .tcol-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;line-height:1.4;}
 .tcol-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 .tcol-sub{font-size:8px;color:var(--text3);margin-top:3px;}
-
 .port-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;}
 .stat-lbl{font-size:9px;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;}
 .stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1;}
 .stat-sub{font-size:9px;color:var(--text3);margin-top:3px;}
-
 .port-toolbar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
 .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
 .filter-row::-webkit-scrollbar{display:none;}
@@ -183,9 +183,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ftab.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
 .sort-select{width:100%;padding:9px 12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);outline:none;-webkit-appearance:none;}
 
+/* ── CARD GRID ── */
 .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:transform 0.15s;}
+.pcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:transform 0.15s,border-color 0.15s;cursor:pointer;}
 .pcard:active{transform:scale(0.97);}
+.pcard:hover{border-color:var(--gold-border);}
 .pcard-img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain;background:#080808;display:block;}
 .pcard-img-ph{width:100%;aspect-ratio:2.5/3.5;background:#080808;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1a1a1a;}
 .pcard-body{padding:9px 10px;}
@@ -195,7 +197,54 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .pval-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
 .pval-num{font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;white-space:nowrap;}
 .pcard-badge{position:absolute;top:7px;right:7px;font-size:8px;font-weight:500;padding:2px 6px;border-radius:3px;letter-spacing:0.5px;}
-.pcard-del{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:5px;background:rgba(244,67,54,0.88);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.pcard-del{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:5px;background:rgba(244,67,54,0.88);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:2;}
+.pcard-expand-hint{font-size:8px;color:var(--text3);text-align:center;padding:4px 0 2px;letter-spacing:1px;}
+
+/* ── CARD DETAIL SHEET ── */
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.sheet-backdrop.open{opacity:1;pointer-events:all;}
+.sheet{position:fixed;bottom:0;left:0;right:0;max-height:92vh;background:var(--bg2);border-radius:24px 24px 0 0;z-index:201;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sheet.open{transform:translateY(0);}
+.sheet-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;flex-shrink:0;}
+.sheet-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
+.sheet-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--text);}
+.sheet-close{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sheet-body{padding:16px 16px calc(var(--safe-bot) + 24px);}
+
+/* Sheet card image */
+.sheet-card-img{width:100%;max-width:220px;margin:0 auto 16px;display:block;aspect-ratio:2.5/3.5;object-fit:contain;background:#080808;border-radius:12px;border:0.5px solid var(--border);}
+.sheet-card-img-ph{width:100%;max-width:220px;margin:0 auto 16px;aspect-ratio:2.5/3.5;background:#080808;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:48px;color:#1a1a1a;}
+
+/* Sheet grade hero */
+.sheet-grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:16px;background:var(--bg3);border-radius:12px;padding:14px;}
+.sheet-grade-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.sgr-num{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;}
+.sgr-max{font-size:9px;color:var(--text2);}
+.sheet-grade-info{flex:1;}
+.sgi-grade{font-size:14px;font-weight:500;letter-spacing:1px;margin-bottom:4px;}
+.sgi-name{font-size:12px;color:var(--text);margin-bottom:2px;}
+.sgi-set{font-size:10px;color:var(--text2);}
+.sgi-date{font-size:9px;color:var(--text3);margin-top:6px;}
+
+/* Sheet section headers */
+.sheet-section{margin-bottom:14px;}
+.sheet-section-hd{font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--border);}
+
+/* Sheet bars */
+.sheet-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.sheet-bar-item{background:var(--bg3);border-radius:8px;padding:10px 12px;}
+
+/* Sheet cost profile */
+.cost-profile{display:flex;flex-direction:column;gap:10px;}
+.cp-row{background:var(--bg3);border-radius:12px;padding:14px 16px;}
+.cp-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.cp-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.cp-value{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.cp-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+.cp-detail{display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);}
+.cp-detail-item{text-align:center;flex:1;}
+.cp-detail-lbl{font-size:8px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.cp-detail-val{font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;}
 
 .empty-port{text-align:center;padding:40px 20px;color:var(--text2);grid-column:1/-1;}
 .ep-icon{font-size:48px;margin-bottom:14px;opacity:0.15;}
@@ -224,7 +273,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div id="api-saved" style="display:none;" class="api-saved">✓ Ready to grade!</div>
   </div>
 
-  <!-- SCANNER -->
+  <!-- SCANNER VIEW -->
   <div class="view active" id="view-scanner">
     <div class="card-name-wrap">
       <input class="card-name-input" type="text" id="cname" placeholder="Card name (e.g. Charizard Base Set 1st Ed)..." autocorrect="off">
@@ -235,7 +284,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
       <div class="ct-placeholder" id="ct-placeholder">
         <div class="ct-icon">📷</div>
         <div class="ct-text">Tap to photograph your card</div>
-        <div class="ct-sub">Uses your iPhone camera</div>
+        <div class="ct-sub">Uses your phone camera</div>
       </div>
       <div class="scan-sweep"></div>
       <div class="scan-badge">SCANNING</div>
@@ -270,13 +319,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <div class="rcard-bd" id="price-panel"><div class="no-data">PSA prices will appear<br>after grading</div></div>
       </div>
       <div class="rcard">
-        <div class="rcard-hd">🟢 eBay Sold — PSA 10 <span style="font-size:8px;color:var(--text3);">live data</span></div>
+        <div class="rcard-hd">🟢 eBay Sold — PSA 10 <span style="font-size:8px;color:var(--text3);">live</span></div>
         <div class="rcard-bd" id="ebay-panel"><div class="no-data">eBay sold prices will<br>load after grading</div></div>
       </div>
     </div>
   </div>
 
-  <!-- PORTFOLIO -->
+  <!-- PORTFOLIO VIEW -->
   <div class="view" id="view-portfolio">
     <div class="grand-total" id="grand-total-box" style="display:none;">
       <div class="gt-label">🏆 Max Collection Value</div>
@@ -324,6 +373,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
   </div>
 </div>
 
+<!-- Bottom Nav -->
 <div class="bottom-nav">
   <button class="bnav-item active" id="bnav-scanner" onclick="switchTab('scanner')">
     <div class="bnav-icon">◈</div>
@@ -334,18 +384,94 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div class="bnav-label">Portfolio <span id="port-count"></span></div>
   </button>
 </div>
+
+<!-- Card Detail Sheet -->
+<div class="sheet-backdrop" id="sheet-backdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="card-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title" id="sheet-card-title">Card Detail</div>
+    <button class="sheet-close" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ── PWA: Register Service Worker ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ── IndexedDB for persistent storage ──
+const DB_NAME = 'pokescan_db';
+const DB_VERSION = 1;
+const STORE_NAME = 'portfolio';
+let db = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains(STORE_NAME)) {
+        d.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(db); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbGetAll() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbPut(item) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const req = tx.objectStore(STORE_NAME).put(item);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbDelete(id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const req = tx.objectStore(STORE_NAME).delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// ── State ──
 let apiKey = localStorage.getItem('pokescan_apikey') || '';
 let b64 = null, lastResult = null, lastImgSrc = null;
 let portfolio = [], activeFilter = 'all', activeSort = 'newest';
-try { portfolio = JSON.parse(localStorage.getItem('pokescan_portfolio') || '[]'); } catch(e) {}
 
-window.onload = () => {
+// ── Init ──
+window.onload = async () => {
   if (apiKey) {
     document.getElementById('api-key-input').value = apiKey;
     document.getElementById('api-saved').style.display = 'flex';
+  }
+  try {
+    await openDB();
+    portfolio = await dbGetAll();
+    // Sort by savedAt desc
+    portfolio.sort((a,b) => new Date(b.savedAt) - new Date(a.savedAt));
+  } catch(e) {
+    // Fall back to localStorage if IndexedDB fails
+    try { portfolio = JSON.parse(localStorage.getItem('pokescan_portfolio') || '[]'); } catch(e2) {}
   }
   updatePortCount();
 };
@@ -368,6 +494,7 @@ function switchTab(t) {
   window.scrollTo(0,0);
 }
 
+// ── File handling ──
 function triggerCapture() { if (!b64) document.getElementById('camera-input').click(); }
 
 function handleFile(file) {
@@ -392,30 +519,30 @@ function handleFile(file) {
 }
 
 function clearAll() {
-  b64 = null; lastResult = null; lastImgSrc = null;
-  const p = document.getElementById('card-preview');
-  p.style.display = 'none'; p.src = '';
-  document.getElementById('ct-placeholder').style.display = 'flex';
+  b64=null; lastResult=null; lastImgSrc=null;
+  const p=document.getElementById('card-preview');
+  p.style.display='none'; p.src='';
+  document.getElementById('ct-placeholder').style.display='flex';
   document.getElementById('cam-trigger').classList.remove('has-image','show-markers','is-scanning');
   clearAnnotations();
-  document.getElementById('grade-stamp').style.display = 'none';
-  document.getElementById('save-row').style.display = 'none';
-  document.getElementById('btn-go').disabled = true;
-  document.getElementById('status').textContent = 'Tap the camera area or upload a photo to begin.';
-  document.getElementById('grade-panel').innerHTML = '<div class="no-data">Scan a card to see<br>your grade analysis</div>';
-  document.getElementById('price-panel').innerHTML = '<div class="no-data">PSA prices will appear<br>after grading</div>';
-  document.getElementById('ebay-panel').innerHTML = '<div class="no-data">eBay sold prices will<br>load after grading</div>';
-  document.getElementById('conf-tag').textContent = '';
-  document.getElementById('camera-input').value = '';
-  document.getElementById('library-input').value = '';
+  document.getElementById('grade-stamp').style.display='none';
+  document.getElementById('save-row').style.display='none';
+  document.getElementById('btn-go').disabled=true;
+  document.getElementById('status').textContent='Tap the camera area or upload a photo to begin.';
+  document.getElementById('grade-panel').innerHTML='<div class="no-data">Scan a card to see<br>your grade analysis</div>';
+  document.getElementById('price-panel').innerHTML='<div class="no-data">PSA prices will appear<br>after grading</div>';
+  document.getElementById('ebay-panel').innerHTML='<div class="no-data">eBay sold prices will<br>load after grading</div>';
+  document.getElementById('conf-tag').textContent='';
+  document.getElementById('camera-input').value='';
+  document.getElementById('library-input').value='';
 }
 
 function clearAnnotations() {
-  const canvas = document.getElementById('annot-canvas');
+  const canvas=document.getElementById('annot-canvas');
   canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id => {
-    const el = document.getElementById(id);
-    el.className = el.className.replace(/good|warn|bad/g,'').trim();
+  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className=el.className.replace(/good|warn|bad/g,'').trim();
   });
 }
 
@@ -423,126 +550,94 @@ function clearAnnotations() {
 async function runGrade() {
   if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
   if (!b64) return;
-  const btnGo = document.getElementById('btn-go');
-  const statusEl = document.getElementById('status');
-  const trigger = document.getElementById('cam-trigger');
-  btnGo.disabled = true; btnGo.textContent = 'Grading...';
+  const btnGo=document.getElementById('btn-go');
+  const statusEl=document.getElementById('status');
+  const trigger=document.getElementById('cam-trigger');
+  btnGo.disabled=true; btnGo.textContent='Grading...';
   trigger.classList.add('is-scanning'); trigger.classList.remove('show-markers');
   clearAnnotations();
-  statusEl.innerHTML = '<span class="spinner"></span>Analyzing card + fetching eBay sold data...';
-  const cardName = document.getElementById('cname').value.trim() || 'Pokémon card';
+  statusEl.innerHTML='<span class="spinner"></span>Analyzing card + fetching eBay sold data...';
+  const cardName=document.getElementById('cname').value.trim()||'Pokémon card';
   try {
-    const [r, ebayData] = await Promise.all([
-      callClaude(b64, cardName),
-      fetchEbaySold(cardName)
-    ]);
-    lastResult = r;
-    lastResult.ebayData = ebayData;
+    const [r,ebayData]=await Promise.all([callClaude(b64,cardName),fetchEbaySold(cardName)]);
+    lastResult=r; lastResult.ebayData=ebayData;
     renderAnnotations(r);
-    renderGrade(r, cardName);
+    renderGrade(r,cardName);
     renderPrices(r);
-    document.getElementById('save-row').style.display = 'block';
-    document.getElementById('conf-tag').textContent = `${r.confidence||85}% confidence`;
-    statusEl.textContent = '✓ Done! Save to Portfolio to track this card.';
-    setTimeout(() => document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}), 300);
+    document.getElementById('save-row').style.display='block';
+    document.getElementById('conf-tag').textContent=`${r.confidence||85}% confidence`;
+    statusEl.textContent='✓ Done! Save to Portfolio to track this card.';
+    setTimeout(()=>document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}),300);
   } catch(e) {
-    statusEl.textContent = '⚠ ' + (e.message || 'Analysis failed. Check your API key.');
+    statusEl.textContent='⚠ '+(e.message||'Analysis failed. Check your API key.');
   }
   trigger.classList.remove('is-scanning');
-  btnGo.disabled = false; btnGo.textContent = 'Grade ▶';
+  btnGo.disabled=false; btnGo.textContent='Grade ▶';
 }
 
 // ── Claude ──
 async function callClaude(imgB64, cardName) {
-  const prompt = `You are a professional PSA Pokémon card grader.
+  const prompt=`You are a professional PSA Pokémon card grader.
 Card: "${cardName}"
 Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %.
 Respond ONLY with valid JSON, no markdown:
 {"cardName":"name","set":"set if identifiable","overallGrade":8,"gradeName":"NM-MT","centering":7,"corners":8,"edges":8,"surface":9,"confidence":82,"centeringNote":"brief","cornersNote":"brief","edgesNote":"brief","surfaceNote":"brief","notes":"1-2 sentence summary","basePrice":25.00,"psaPrices":{"10":500,"9":200,"8":100,"7":60,"6":40,"5":30,"4":22,"3":18,"2":15,"1":12}}`;
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-opus-4-5', max_tokens: 1200,
-      messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imgB64 } },
-        { type: 'text', text: prompt }
-      ]}]
-    })
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgB64}},{type:'text',text:prompt}]}]})
   });
-  if (!resp.ok) {
-    const err = await resp.json().catch(()=>({}));
-    throw new Error(err?.error?.message || `API error ${resp.status}`);
-  }
-  const data = await resp.json();
-  const text = (data.content||[]).map(b=>b.text||'').join('');
+  if (!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`API error ${resp.status}`);}
+  const data=await resp.json();
+  const text=(data.content||[]).map(b=>b.text||'').join('');
   return JSON.parse(text.replace(/```json|```/g,'').trim());
 }
 
 // ── eBay RSS ──
 async function fetchEbaySold(cardName) {
-  const panel = document.getElementById('ebay-panel');
-  panel.innerHTML = '<div class="ebay-loading"><span class="spinner"></span>Fetching eBay PSA 10 sold listings...</div>';
+  const panel=document.getElementById('ebay-panel');
+  panel.innerHTML='<div class="ebay-loading"><span class="spinner"></span>Fetching eBay PSA 10 sold listings...</div>';
   try {
-    const query = encodeURIComponent(cardName + ' pokemon PSA 10');
-    const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${query}&LH_Sold=1&LH_Complete=1&_rss=1`;
-    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(ebayUrl)}`;
-    const resp = await fetch(proxyUrl);
-    if (!resp.ok) throw new Error('proxy failed');
-    const wrapper = await resp.json();
-    const xml = wrapper.contents;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xml, 'text/xml');
-    const items = Array.from(doc.querySelectorAll('item'));
-    if (!items.length) { panel.innerHTML = ebayErrorHTML(cardName); return null; }
-
-    const listings = [];
-    for (const item of items.slice(0, 25)) {
-      const title = item.querySelector('title')?.textContent || '';
-      const desc  = item.querySelector('description')?.textContent || '';
-      const combined = desc + ' ' + title;
-      // Extract dollar amounts — prefer patterns like $123.45 or USD 123.45
-      const matches = [...combined.matchAll(/\$\s*([\d,]+(?:\.\d{2})?)/g)];
-      for (const m of matches) {
-        const price = parseFloat(m[1].replace(/,/g,''));
-        if (price >= 1 && price < 500000) {
-          listings.push({ title: title.replace(/<[^>]+>/g,'').trim().slice(0,60), price });
-          break;
-        }
+    const query=encodeURIComponent(cardName+' pokemon PSA 10');
+    const ebayUrl=`https://www.ebay.com/sch/i.html?_nkw=${query}&LH_Sold=1&LH_Complete=1&_rss=1`;
+    const proxyUrl=`https://api.allorigins.win/get?url=${encodeURIComponent(ebayUrl)}`;
+    const resp=await fetch(proxyUrl);
+    if(!resp.ok) throw new Error('proxy failed');
+    const wrapper=await resp.json();
+    const doc=new DOMParser().parseFromString(wrapper.contents,'text/xml');
+    const items=Array.from(doc.querySelectorAll('item'));
+    if(!items.length){panel.innerHTML=ebayErrorHTML(cardName);return null;}
+    const listings=[];
+    for(const item of items.slice(0,25)){
+      const title=item.querySelector('title')?.textContent||'';
+      const desc=item.querySelector('description')?.textContent||'';
+      const matches=[...(desc+' '+title).matchAll(/\$\s*([\d,]+(?:\.\d{2})?)/g)];
+      for(const m of matches){
+        const price=parseFloat(m[1].replace(/,/g,''));
+        if(price>=1&&price<500000){listings.push({title:title.replace(/<[^>]+>/g,'').trim().slice(0,60),price});break;}
       }
     }
-
-    if (!listings.length) { panel.innerHTML = ebayErrorHTML(cardName); return null; }
-
-    listings.sort((a,b) => b.price - a.price);
-    const highest = listings[0].price;
-    const avg = listings.reduce((s,l) => s+l.price, 0) / listings.length;
-    const lowest = listings[listings.length-1].price;
-    const count = listings.length;
-    const top5 = listings.slice(0,5);
-    const ebayData = { highest, avg, lowest, count, top5, cardName };
+    if(!listings.length){panel.innerHTML=ebayErrorHTML(cardName);return null;}
+    listings.sort((a,b)=>b.price-a.price);
+    const highest=listings[0].price;
+    const avg=listings.reduce((s,l)=>s+l.price,0)/listings.length;
+    const lowest=listings[listings.length-1].price;
+    const count=listings.length;
+    const top5=listings.slice(0,5);
+    const ebayData={highest,avg,lowest,count,top5,cardName};
     renderEbayPanel(ebayData);
     return ebayData;
-  } catch(e) {
-    panel.innerHTML = ebayErrorHTML(cardName);
-    return null;
-  }
+  } catch(e){panel.innerHTML=ebayErrorHTML(cardName);return null;}
 }
 
-function ebayErrorHTML(cardName) {
-  const q = encodeURIComponent(cardName + ' pokemon PSA 10');
-  return `<div class="ebay-error">Could not auto-fetch eBay data. This can happen due to network restrictions.<br>
-    <a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 View PSA 10 sold listings on eBay →</a></div>`;
+function ebayErrorHTML(cardName){
+  const q=encodeURIComponent(cardName+' pokemon PSA 10');
+  return `<div class="ebay-error">Could not auto-fetch eBay data.<br><a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 View PSA 10 sold listings on eBay →</a></div>`;
 }
 
-function renderEbayPanel(d) {
-  const fmt = v => '$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-  document.getElementById('ebay-panel').innerHTML = `
+function renderEbayPanel(d){
+  const fmt=v=>'$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('ebay-panel').innerHTML=`
     <div class="ebay-banner">
       <div class="ebay-banner-label"><span class="ebay-live-dot"></span>Highest PSA 10 Sold</div>
       <div class="ebay-top-val">${fmt(d.highest)}</div>
@@ -553,54 +648,45 @@ function renderEbayPanel(d) {
         <div><div class="ebay-stat-lbl">Lowest</div><div class="ebay-stat-val">${fmt(d.lowest)}</div></div>
       </div>
     </div>
-    <div class="ebay-listings">
-      ${d.top5.map(l=>`
-        <div class="ebay-listing-row">
-          <div class="ebay-listing-title">${l.title||'—'}</div>
-          <div class="ebay-listing-price">${fmt(l.price)}</div>
-        </div>`).join('')}
-    </div>
+    <div class="ebay-listings">${d.top5.map(l=>`<div class="ebay-listing-row"><div class="ebay-listing-title">${l.title||'—'}</div><div class="ebay-listing-price">${fmt(l.price)}</div></div>`).join('')}</div>
     <a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(d.cardName+' pokemon PSA 10')}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 See all sold listings on eBay →</a>`;
 }
 
 // ── Colors ──
-const GC = {10:'#FFD700',9:'#e8b923',8:'#7ec8e3',7:'#7ec8e3',6:'#a8d8a8',5:'#a8d8a8',4:'#f4a261',3:'#f4a261',2:'#e07070',1:'#e07070'};
-const GN = {10:'GEM MINT',9:'MINT',8:'NM-MT',7:'NEAR MINT',6:'EX-MT',5:'EXCELLENT',4:'VG-EX',3:'VERY GOOD',2:'GOOD',1:'POOR'};
-const SC = s => s>=8?'#4caf50':s>=5?'#ff9800':'#f44336';
-const SCls = s => s>=8?'good':s>=5?'warn':'bad';
+const GC={10:'#FFD700',9:'#e8b923',8:'#7ec8e3',7:'#7ec8e3',6:'#a8d8a8',5:'#a8d8a8',4:'#f4a261',3:'#f4a261',2:'#e07070',1:'#e07070'};
+const GN={10:'GEM MINT',9:'MINT',8:'NM-MT',7:'NEAR MINT',6:'EX-MT',5:'EXCELLENT',4:'VG-EX',3:'VERY GOOD',2:'GOOD',1:'POOR'};
+const SC=s=>s>=8?'#4caf50':s>=5?'#ff9800':'#f44336';
+const SCls=s=>s>=8?'good':s>=5?'warn':'bad';
+const f$=v=>v>0?'$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}):'—';
+const f$d=v=>v>0?'$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
 
 // ── Annotations ──
-function renderAnnotations(r) {
-  const trigger = document.getElementById('cam-trigger');
-  const canvas = document.getElementById('annot-canvas');
-  const ctx = canvas.getContext('2d');
-  const rect = trigger.getBoundingClientRect();
-  canvas.width = rect.width; canvas.height = rect.height;
-  const cls = SCls(r.corners);
-  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id => {
-    const el = document.getElementById(id);
-    el.className = el.className.replace(/good|warn|bad/g,'').trim()+' '+cls;
+function renderAnnotations(r){
+  const trigger=document.getElementById('cam-trigger');
+  const canvas=document.getElementById('annot-canvas');
+  const ctx=canvas.getContext('2d');
+  const rect=trigger.getBoundingClientRect();
+  canvas.width=rect.width; canvas.height=rect.height;
+  const cls=SCls(r.corners);
+  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className=el.className.replace(/good|warn|bad/g,'').trim()+' '+cls;
   });
-  document.getElementById('cg').style.borderColor = SC(r.centering);
+  document.getElementById('cg').style.borderColor=SC(r.centering);
   const w=canvas.width,h=canvas.height,p=0.05;
   const x0=w*p,y0=h*p,x1=w*(1-p),y1=h*(1-p);
   ctx.save();
   ctx.strokeStyle=SC(r.edges);ctx.lineWidth=1.5;ctx.setLineDash([6,4]);ctx.globalAlpha=0.75;
   [[x0+16,y0,x1-16,y0],[x0+16,y1,x1-16,y1],[x0,y0+16,x0,y1-16],[x1,y0+16,x1,y1-16]].forEach(([ax,ay,bx,by])=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();});
-  if (r.surface<8) {
-    ctx.setLineDash([]);ctx.fillStyle=SC(r.surface);ctx.globalAlpha=0.8;
-    ctx.beginPath();ctx.arc(w*0.5,h*0.42,6,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.globalAlpha=0.4;ctx.stroke();
-  }
+  if(r.surface<8){ctx.setLineDash([]);ctx.fillStyle=SC(r.surface);ctx.globalAlpha=0.8;ctx.beginPath();ctx.arc(w*0.5,h*0.42,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.globalAlpha=0.4;ctx.stroke();}
   ctx.restore();
   trigger.classList.add('show-markers');
   const stamp=document.getElementById('grade-stamp'),num=document.getElementById('gs-num');
   num.textContent=r.overallGrade;num.style.color=GC[r.overallGrade]||'#e8b923';stamp.style.display='flex';
 }
 
-// ── Grade panel ──
-function renderGrade(r, cardName) {
-  const g=r.overallGrade, gc=GC[g]||'#e8b923';
+function renderGrade(r,cardName){
+  const g=r.overallGrade,gc=GC[g]||'#e8b923';
   const criteria=[{l:'Centering',s:r.centering},{l:'Corners',s:r.corners},{l:'Edges',s:r.edges},{l:'Surface',s:r.surface}];
   document.getElementById('grade-panel').innerHTML=`
     <div class="grade-hero">
@@ -617,8 +703,7 @@ function renderGrade(r, cardName) {
     </div>`;
 }
 
-// ── PSA Price panel ──
-function renderPrices(r) {
+function renderPrices(r){
   const g=r.overallGrade,prices=r.psaPrices||{},base=r.basePrice||0;
   const psa10=prices[10]||prices['10']||0;
   const psaCur=prices[g]||prices[String(g)]||0;
@@ -627,154 +712,249 @@ function renderPrices(r) {
   const is10=g===10;
   const rows=[10,9,8,7,6,5,4,3,2,1].map(grade=>{
     const price=prices[grade]||prices[String(grade)],isCur=grade===g,color=GC[grade];
-    return `<tr class="${isCur?'cur':''}">
-      <td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${grade===10&&!isCur?' 👑':''}</td>
-      <td style="text-align:right;font-weight:${isCur||grade===10?500:400};color:${grade===10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td>
-    </tr>`;
+    return `<tr class="${isCur?'cur':''}"><td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${grade===10&&!isCur?' 👑':''}</td><td style="text-align:right;font-weight:${isCur||grade===10?500:400};color:${grade===10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td></tr>`;
   }).join('');
   document.getElementById('price-panel').innerHTML=`
     <div class="max-banner">
       <div class="max-banner-label"><span>👑</span>PSA 10 Max Value</div>
       <div class="max-val">$${psa10?Number(psa10).toLocaleString():'—'}</div>
       <div class="max-sub">Maximum value if this card grades PSA 10</div>
-      ${!is10&&uplift>0?`<div class="max-vs">
-        <div class="max-vs-item"><div class="max-vs-lbl">Grade ${g}</div><div class="max-vs-val" style="color:${GC[g]}">$${Number(psaCur).toLocaleString()}</div></div>
-        <div class="max-vs-div">→</div>
-        <div class="max-vs-item"><div class="max-vs-lbl">PSA 10</div><div class="max-vs-val" style="color:#FFD700">$${Number(psa10).toLocaleString()}</div></div>
-        <div class="max-vs-div"></div>
-        <div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" style="color:var(--green)">+$${Number(uplift).toLocaleString()}</div><div class="uplift-badge">+${upliftPct}%</div></div>
-      </div>`:is10?`<div style="font-size:10px;color:var(--green);margin-top:8px;">✓ Already at maximum grade!</div>`:''}
+      ${!is10&&uplift>0?`<div class="max-vs"><div class="max-vs-item"><div class="max-vs-lbl">Grade ${g}</div><div class="max-vs-val" style="color:${GC[g]}">$${Number(psaCur).toLocaleString()}</div></div><div class="max-vs-div">→</div><div class="max-vs-item"><div class="max-vs-lbl">PSA 10</div><div class="max-vs-val" style="color:#FFD700">$${Number(psa10).toLocaleString()}</div></div><div class="max-vs-div"></div><div class="max-vs-item"><div class="max-vs-lbl">Upside</div><div class="max-vs-val" style="color:var(--green)">+$${Number(uplift).toLocaleString()}</div><div class="uplift-badge">+${upliftPct}%</div></div></div>`:is10?`<div style="font-size:10px;color:var(--green);margin-top:8px;">✓ Already at maximum grade!</div>`:''}
     </div>
     <div class="base-row"><span class="base-lbl">Ungraded Market</span><span class="base-val">$${Number(base).toFixed(2)}</span></div>
     <table class="ptable"><thead><tr><th>PSA Grade</th><th style="text-align:right">Est. Value</th></tr></thead><tbody>${rows}</tbody></table>
     <div class="disclaimer">* AI estimates. Verify on TCGPlayer or PSA for current data.</div>`;
 }
 
-// ── Portfolio ──
-function saveToPortfolio() {
-  if (!lastResult) return;
-  const prices=lastResult.psaPrices||{}, g=lastResult.overallGrade, eb=lastResult.ebayData||{};
-  const entry = {
-    id: Date.now(),
-    cardName: lastResult.cardName || document.getElementById('cname').value.trim() || 'Unknown Card',
-    set: lastResult.set || '',
-    overallGrade: g,
-    gradeName: lastResult.gradeName || GN[g],
-    basePrice: lastResult.basePrice || 0,
-    psaPrice:   prices[g]  || prices[String(g)]  || 0,
-    psa10Price: prices[10] || prices['10'] || 0,
-    ebayHighest: eb.highest || 0,
-    ebayAvg:     eb.avg     || 0,
-    ebayCount:   eb.count   || 0,
-    centering: lastResult.centering, corners: lastResult.corners,
-    edges: lastResult.edges, surface: lastResult.surface,
-    confidence: lastResult.confidence || 80,
-    imgSrc: lastImgSrc,
-    savedAt: new Date().toISOString()
+// ── Portfolio save/delete ──
+async function saveToPortfolio(){
+  if(!lastResult) return;
+  const prices=lastResult.psaPrices||{},g=lastResult.overallGrade,eb=lastResult.ebayData||{};
+  const entry={
+    id:Date.now(),
+    cardName:lastResult.cardName||document.getElementById('cname').value.trim()||'Unknown Card',
+    set:lastResult.set||'',
+    overallGrade:g,
+    gradeName:lastResult.gradeName||GN[g],
+    basePrice:lastResult.basePrice||0,
+    psaPrice:prices[g]||prices[String(g)]||0,
+    psa10Price:prices[10]||prices['10']||0,
+    ebayHighest:eb.highest||0,
+    ebayAvg:eb.avg||0,
+    ebayLowest:eb.lowest||0,
+    ebayCount:eb.count||0,
+    centering:lastResult.centering,corners:lastResult.corners,
+    edges:lastResult.edges,surface:lastResult.surface,
+    confidence:lastResult.confidence||80,
+    notes:lastResult.notes||'',
+    centeringNote:lastResult.centeringNote||'',
+    cornersNote:lastResult.cornersNote||'',
+    edgesNote:lastResult.edgesNote||'',
+    surfaceNote:lastResult.surfaceNote||'',
+    imgSrc:lastImgSrc,
+    savedAt:new Date().toISOString()
   };
   portfolio.unshift(entry);
-  try { localStorage.setItem('pokescan_portfolio', JSON.stringify(portfolio)); } catch(e) {}
+  try {
+    await dbPut(entry);
+  } catch(e) {
+    // Fallback to localStorage
+    try{localStorage.setItem('pokescan_portfolio',JSON.stringify(portfolio));}catch(e2){}
+  }
   updatePortCount();
   showToast('✓ Saved to portfolio!');
-  document.getElementById('save-row').style.display = 'none';
-  document.getElementById('status').textContent = '✓ Saved! Scan another card anytime.';
+  document.getElementById('save-row').style.display='none';
+  document.getElementById('status').textContent='✓ Saved! Scan another card anytime.';
 }
 
-function deleteCard(id) {
-  portfolio = portfolio.filter(c => c.id !== id);
-  try { localStorage.setItem('pokescan_portfolio', JSON.stringify(portfolio)); } catch(e) {}
-  updatePortCount(); renderPortfolio(); showToast('Card removed.');
-}
-
-function updatePortCount() {
-  document.getElementById('port-count').textContent = portfolio.length ? `(${portfolio.length})` : '';
-}
-
-function setFilter(f, el) {
-  activeFilter=f;
-  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
+async function deleteCard(id){
+  portfolio=portfolio.filter(c=>c.id!==id);
+  try{await dbDelete(id);}catch(e){try{localStorage.setItem('pokescan_portfolio',JSON.stringify(portfolio));}catch(e2){}}
+  updatePortCount();
+  closeSheet();
   renderPortfolio();
+  showToast('Card removed.');
 }
-function setSort(v) { activeSort=v; renderPortfolio(); }
 
-const f$ = v => v>0 ? '$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}) : '—';
-const f$d = v => v>0 ? '$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+function updatePortCount(){
+  document.getElementById('port-count').textContent=portfolio.length?`(${portfolio.length})`:'';
+}
 
-function renderPortfolio() {
-  const total      = portfolio.length;
-  const psaTotal   = portfolio.reduce((s,c)=>s+(Number(c.psaPrice)||0),0);
-  const max10Total = portfolio.reduce((s,c)=>s+(Number(c.psa10Price)||Number(c.psaPrice)||0),0);
-  const ebayTotal  = portfolio.reduce((s,c)=>s+(Number(c.ebayHighest)||0),0);
-  const avgGrade   = total ? (portfolio.reduce((s,c)=>s+c.overallGrade,0)/total).toFixed(1) : '—';
-  // Grand total = best value per card across all 3 metrics
-  const grandTotal = portfolio.reduce((s,c) => {
-    return s + Math.max(Number(c.psaPrice)||0, Number(c.psa10Price)||0, Number(c.ebayHighest)||0);
-  }, 0);
+// ── Portfolio render ──
+function setFilter(f,el){activeFilter=f;document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderPortfolio();}
+function setSort(v){activeSort=v;renderPortfolio();}
 
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-avg').textContent = avgGrade;
+function renderPortfolio(){
+  const total=portfolio.length;
+  const psaTotal=portfolio.reduce((s,c)=>s+(Number(c.psaPrice)||0),0);
+  const max10Total=portfolio.reduce((s,c)=>s+(Number(c.psa10Price)||Number(c.psaPrice)||0),0);
+  const ebayTotal=portfolio.reduce((s,c)=>s+(Number(c.ebayHighest)||0),0);
+  const avgGrade=total?(portfolio.reduce((s,c)=>s+c.overallGrade,0)/total).toFixed(1):'—';
+  const grandTotal=portfolio.reduce((s,c)=>s+Math.max(Number(c.psaPrice)||0,Number(c.psa10Price)||0,Number(c.ebayHighest)||0),0);
 
-  const show = total > 0;
-  document.getElementById('grand-total-box').style.display = show ? 'block' : 'none';
-  document.getElementById('three-cols-box').style.display = show ? 'grid' : 'none';
-  if (show) {
-    document.getElementById('gt-val').textContent = f$(grandTotal);
-    document.getElementById('tc-psa').textContent  = f$(psaTotal);
-    document.getElementById('tc-max').textContent  = f$(max10Total);
-    document.getElementById('tc-ebay').textContent = f$(ebayTotal);
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-avg').textContent=avgGrade;
+  const show=total>0;
+  document.getElementById('grand-total-box').style.display=show?'block':'none';
+  document.getElementById('three-cols-box').style.display=show?'grid':'none';
+  if(show){
+    document.getElementById('gt-val').textContent=f$(grandTotal);
+    document.getElementById('tc-psa').textContent=f$(psaTotal);
+    document.getElementById('tc-max').textContent=f$(max10Total);
+    document.getElementById('tc-ebay').textContent=f$(ebayTotal);
   }
 
-  let cards = [...portfolio];
-  if (activeFilter==='gem')  cards=cards.filter(c=>c.overallGrade===10);
-  else if (activeFilter==='mint') cards=cards.filter(c=>c.overallGrade===9);
-  else if (activeFilter==='mid')  cards=cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
-  else if (activeFilter==='low')  cards=cards.filter(c=>c.overallGrade<=4);
-  if (activeSort==='grade-hi') cards.sort((a,b)=>b.overallGrade-a.overallGrade);
-  else if (activeSort==='grade-lo') cards.sort((a,b)=>a.overallGrade-b.overallGrade);
-  else if (activeSort==='value-hi') cards.sort((a,b)=>(b.ebayHighest||0)-(a.ebayHighest||0));
-  else if (activeSort==='name') cards.sort((a,b)=>a.cardName.localeCompare(b.cardName));
+  let cards=[...portfolio];
+  if(activeFilter==='gem') cards=cards.filter(c=>c.overallGrade===10);
+  else if(activeFilter==='mint') cards=cards.filter(c=>c.overallGrade===9);
+  else if(activeFilter==='mid') cards=cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
+  else if(activeFilter==='low') cards=cards.filter(c=>c.overallGrade<=4);
+  if(activeSort==='grade-hi') cards.sort((a,b)=>b.overallGrade-a.overallGrade);
+  else if(activeSort==='grade-lo') cards.sort((a,b)=>a.overallGrade-b.overallGrade);
+  else if(activeSort==='value-hi') cards.sort((a,b)=>(b.ebayHighest||0)-(a.ebayHighest||0));
+  else if(activeSort==='name') cards.sort((a,b)=>a.cardName.localeCompare(b.cardName));
 
-  const grid = document.getElementById('card-grid');
-  if (!portfolio.length) {
+  const grid=document.getElementById('card-grid');
+  if(!portfolio.length){
     grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards yet.<br>Scan and grade cards to<br>build your vault.</div><button class="ep-cta" onclick="switchTab('scanner')">Go to Scanner ▶</button></div>`;
     return;
   }
-  if (!cards.length) {
-    grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards match this filter.</div></div>`;
-    return;
-  }
+  if(!cards.length){grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards match this filter.</div></div>`;return;}
 
-  grid.innerHTML = cards.map(c => {
-    const gc = GC[c.overallGrade]||'#e8b923';
-    const imgEl = c.imgSrc ? `<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">` : `<div class="pcard-img-ph">◻</div>`;
-    return `<div class="pcard">
+  grid.innerHTML=cards.map(c=>{
+    const gc=GC[c.overallGrade]||'#e8b923';
+    const imgEl=c.imgSrc?`<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">`:`<div class="pcard-img-ph">◻</div>`;
+    return `<div class="pcard" onclick="openSheet(${c.id})">
       ${imgEl}
-      <button class="pcard-del" onclick="deleteCard(${c.id})" title="Remove">✕</button>
+      <button class="pcard-del" onclick="event.stopPropagation();deleteCard(${c.id})" title="Remove">✕</button>
       <div class="pcard-badge" style="background:${gc}22;color:${gc};border:0.5px solid ${gc}55">${c.gradeName||GN[c.overallGrade]}</div>
       <div class="pcard-body">
         <div class="pcard-name" title="${c.cardName}">${c.cardName}</div>
         <div class="pcard-vals">
-          <div class="pval">
-            <div class="pval-lbl">🟡 PSA ${c.overallGrade}</div>
-            <div class="pval-num" style="color:${gc}">${f$(c.psaPrice)}</div>
-          </div>
-          <div class="pval">
-            <div class="pval-lbl">👑 PSA 10</div>
-            <div class="pval-num" style="color:#FFD700">${f$(c.psa10Price)}</div>
-          </div>
-          <div class="pval">
-            <div class="pval-lbl">🟢 eBay sold</div>
-            <div class="pval-num" style="color:var(--green)">${f$d(c.ebayHighest)}</div>
-          </div>
+          <div class="pval"><div class="pval-lbl">🟡 PSA ${c.overallGrade}</div><div class="pval-num" style="color:${gc}">${f$(c.psaPrice)}</div></div>
+          <div class="pval"><div class="pval-lbl">👑 PSA 10</div><div class="pval-num" style="color:#FFD700">${f$(c.psa10Price)}</div></div>
+          <div class="pval"><div class="pval-lbl">🟢 eBay</div><div class="pval-num" style="color:var(--green)">${f$d(c.ebayHighest)}</div></div>
         </div>
-        ${c.set?`<div style="font-size:9px;color:var(--text3);margin-top:4px;">${c.set}</div>`:''}
       </div>
+      <div class="pcard-expand-hint">TAP TO EXPAND</div>
     </div>`;
   }).join('');
 }
 
-function showToast(msg) {
+// ── Card Detail Sheet ──
+function openSheet(id){
+  const c=portfolio.find(x=>x.id===id);
+  if(!c) return;
+  const gc=GC[c.overallGrade]||'#e8b923';
+  const criteria=[{l:'Centering',s:c.centering,n:c.centeringNote},{l:'Corners',s:c.corners,n:c.cornersNote},{l:'Edges',s:c.edges,n:c.edgesNote},{l:'Surface',s:c.surface,n:c.surfaceNote}];
+  const savedDate=c.savedAt?new Date(c.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
+  const psa10=Number(c.psa10Price)||0;
+  const psaCur=Number(c.psaPrice)||0;
+  const uplift=psa10-psaCur;
+  const upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0;
+
+  document.getElementById('sheet-card-title').textContent=c.cardName;
+  document.getElementById('sheet-body').innerHTML=`
+    ${c.imgSrc
+      ?`<img class="sheet-card-img" src="${c.imgSrc}" alt="${c.cardName}">`
+      :`<div class="sheet-card-img-ph">◻</div>`}
+
+    <div class="sheet-grade-hero">
+      <div class="sheet-grade-ring" style="border-color:${gc}">
+        <div class="sgr-num" style="color:${gc}">${c.overallGrade}</div>
+        <div class="sgr-max">/10</div>
+      </div>
+      <div class="sheet-grade-info">
+        <div class="sgi-grade" style="color:${gc}">${c.gradeName||GN[c.overallGrade]}</div>
+        <div class="sgi-name">${c.cardName}</div>
+        ${c.set?`<div class="sgi-set">${c.set}</div>`:''}
+        <div class="sgi-date">Scanned ${savedDate}</div>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-section-hd">Grading Breakdown</div>
+      <div class="sheet-bars">
+        ${criteria.map(cr=>`
+          <div class="sheet-bar-item">
+            <div class="bar-lbl">${cr.l}</div>
+            <div class="bar-track"><div class="bar-fill" style="width:${(cr.s||0)*10}%;background:${SC(cr.s||0)}"></div></div>
+            <div class="bar-score" style="color:${SC(cr.s||0)}">${cr.s||'—'}/10</div>
+            ${cr.n?`<div style="font-size:9px;color:var(--text2);margin-top:3px;line-height:1.5;">${cr.n}</div>`:''}
+          </div>`).join('')}
+      </div>
+      ${c.notes?`<div class="notes-box">${c.notes}</div>`:''}
+      <div class="acc-row">
+        <span class="acc-lbl">AI CONFIDENCE</span>
+        <div class="acc-bar-w"><div class="acc-bar-f" style="width:${c.confidence||80}%"></div></div>
+        <span class="acc-pct">${c.confidence||80}%</span>
+      </div>
+    </div>
+
+    <div class="sheet-section">
+      <div class="sheet-section-hd">Cost Profile</div>
+      <div class="cost-profile">
+
+        <div class="cp-row" style="border:0.5px solid ${gc}33;">
+          <div class="cp-row-top">
+            <div class="cp-label" style="color:${gc}">🟡 Current PSA ${c.overallGrade} Value</div>
+          </div>
+          <div class="cp-value" style="color:${gc}">${f$(c.psaPrice)}</div>
+          <div class="cp-sub">Estimated value at PSA grade ${c.overallGrade} (${c.gradeName||GN[c.overallGrade]})</div>
+        </div>
+
+        <div class="cp-row" style="border:0.5px solid var(--gold-border);">
+          <div class="cp-row-top">
+            <div class="cp-label" style="color:#FFD700">👑 PSA 10 Ceiling</div>
+          </div>
+          <div class="cp-value" style="color:#FFD700">${f$(c.psa10Price)}</div>
+          <div class="cp-sub">Maximum value if this card grades PSA 10 (Gem Mint)</div>
+          ${uplift>0?`<div class="cp-detail">
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Current</div><div class="cp-detail-val" style="color:${gc}">${f$(psaCur)}</div></div>
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Upside $</div><div class="cp-detail-val" style="color:var(--green)">+${f$(uplift)}</div></div>
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Upside %</div><div class="cp-detail-val" style="color:var(--green)">+${upliftPct}%</div></div>
+          </div>`:''}
+        </div>
+
+        <div class="cp-row" style="border:0.5px solid var(--green-border);">
+          <div class="cp-row-top">
+            <div class="cp-label" style="color:var(--green)">🟢 eBay Highest Sold (PSA 10)</div>
+          </div>
+          <div class="cp-value" style="color:var(--green)">${f$d(c.ebayHighest)}</div>
+          <div class="cp-sub">Highest recent sale on eBay for this card graded PSA 10</div>
+          ${c.ebayAvg>0?`<div class="cp-detail">
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Highest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayHighest)}</div></div>
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Avg Sale</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayAvg)}</div></div>
+            <div class="cp-detail-item"><div class="cp-detail-lbl">Lowest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayLowest||0)}</div></div>
+          </div>`:''}
+          ${c.ebayCount?`<div style="font-size:9px;color:var(--text3);margin-top:8px;">Based on ${c.ebayCount} sold listing${c.ebayCount!==1?'s':''}</div>`:''}
+        </div>
+
+      </div>
+    </div>
+
+    <button onclick="deleteCard(${c.id})" style="width:100%;margin-top:16px;padding:14px;border-radius:12px;background:rgba(244,67,54,0.1);border:0.5px solid rgba(244,67,54,0.4);color:var(--red);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;">Remove from Portfolio</button>
+  `;
+
+  document.getElementById('sheet-backdrop').classList.add('open');
+  document.getElementById('card-sheet').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeSheet(){
+  document.getElementById('sheet-backdrop').classList.remove('open');
+  document.getElementById('card-sheet').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// Close sheet on swipe down
+let sheetStartY=0;
+document.getElementById('card-sheet').addEventListener('touchstart',e=>{sheetStartY=e.touches[0].clientY;},{passive:true});
+document.getElementById('card-sheet').addEventListener('touchend',e=>{
+  if(e.changedTouches[0].clientY-sheetStartY>80) closeSheet();
+},{passive:true});
+
+function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
