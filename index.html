@@ -5,137 +5,186 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0f0f0f">
+<meta name="theme-color" content="#0a0a0f">
 <link rel="manifest" href="manifest.json">
 <title>PokéScan</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --gold:#e8b923;--gold-dim:rgba(232,185,35,0.12);--gold-border:rgba(232,185,35,0.35);
-  --bg:#0c0c0c;--bg2:#161616;--bg3:#202020;--bg4:#252525;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#ece8df;--text2:#888;--text3:#444;
+  --poke-yellow:#FFCB05;
+  --poke-yellow-dim:rgba(255,203,5,0.12);
+  --poke-yellow-border:rgba(255,203,5,0.35);
+  --poke-red:#CC0000;
+  --poke-red-dim:rgba(204,0,0,0.1);
+  --poke-red-border:rgba(204,0,0,0.35);
+  --poke-blue:#003A70;
+  --bg:#0a0a0f;
+  --bg2:#12121a;
+  --bg3:#1a1a24;
+  --bg4:#22222e;
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.12);
+  --text:#f0ede8;
+  --text2:#8888a0;
+  --text3:#44445a;
   --green:#4caf50;--green-dim:rgba(76,175,80,0.09);--green-border:rgba(76,175,80,0.35);
-  --orange:#ff9800;--red:#f44336;
-  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
+  --orange:#ff9800;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
 }
+
 html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;overflow-x:hidden;}
-.app{max-width:480px;margin:0 auto;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 90px);}
+
+/* ── BACKGROUND SILHOUETTES ── */
+.bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-layer svg{position:absolute;opacity:0.032;}
+.sil-1{bottom:-40px;right:-60px;width:340px;transform:rotate(15deg);}
+.sil-2{top:60px;left:-80px;width:280px;transform:rotate(-10deg);}
+.sil-3{top:38%;right:-40px;width:200px;transform:rotate(5deg);}
+.sil-4{bottom:30%;left:-50px;width:180px;transform:rotate(-15deg);}
+.sil-5{top:12%;right:20px;width:130px;transform:rotate(20deg);}
+
+/* Pokéball background circles */
+.pokeball-bg{position:fixed;pointer-events:none;z-index:0;border-radius:50%;border:1px solid rgba(255,203,5,0.04);}
+.pb1{width:600px;height:600px;top:-200px;right:-200px;}
+.pb2{width:400px;height:400px;bottom:-150px;left:-150px;}
+.pb3{width:200px;height:200px;top:40%;left:50%;transform:translate(-50%,-50%);}
+
+/* ── APP SHELL ── */
+.app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:calc(var(--safe-top) + 16px) 16px calc(var(--safe-bot) + 90px);}
 
 /* ── HEADER ── */
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;}
-.logo em{color:var(--gold);font-style:normal;}
-.tag{font-size:8px;letter-spacing:2px;color:var(--text2);border:0.5px solid var(--border2);padding:4px 9px;border-radius:3px;}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.logo-wrap{display:flex;align-items:center;gap:10px;}
+.pokeball-icon{width:32px;height:32px;flex-shrink:0;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:4px;line-height:1;}
+.logo em{color:var(--poke-yellow);font-style:normal;}
+.logo span{color:var(--poke-red);}
+.tag{font-size:8px;letter-spacing:2px;color:var(--text2);border:0.5px solid var(--poke-yellow-border);padding:4px 9px;border-radius:3px;color:var(--poke-yellow);}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,12,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);padding:10px 0 calc(var(--safe-bot) + 10px);display:flex;justify-content:space-around;z-index:100;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--poke-red);padding:10px 0 calc(var(--safe-bot) + 10px);display:flex;justify-content:space-around;z-index:100;}
 .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 20px;cursor:pointer;color:var(--text3);transition:color 0.15s;border:none;background:none;}
-.bnav-item.active{color:var(--gold);}
+.bnav-item.active{color:var(--poke-yellow);}
 .bnav-icon{font-size:20px;line-height:1;}
 .bnav-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;}
+.bnav-dot{width:4px;height:4px;border-radius:50%;background:var(--poke-yellow);margin:0 auto;margin-top:2px;opacity:0;transition:opacity 0.15s;}
+.bnav-item.active .bnav-dot{opacity:1;}
 
 .view{display:none;}.view.active{display:block;}
 
 /* ── API SETUP ── */
-.api-card{background:var(--bg2);border:1px solid var(--gold-border);border-radius:16px;padding:18px;margin-bottom:18px;}
-.api-card h3{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--gold);margin-bottom:6px;}
+.api-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--poke-yellow-border);border-radius:18px;padding:18px;margin-bottom:18px;position:relative;overflow:hidden;}
+.api-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;border:20px solid rgba(255,203,5,0.05);}
+.api-card h3{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--poke-yellow);margin-bottom:6px;}
 .api-card p{font-size:10px;color:var(--text2);line-height:1.9;margin-bottom:12px;}
-.api-card a{color:var(--gold);}
+.api-card a{color:var(--poke-yellow);}
 .api-row{display:flex;gap:8px;}
-.api-input{flex:1;padding:11px 13px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;}
-.api-input:focus{border-color:var(--gold);}
-.api-btn{padding:11px 16px;background:var(--gold);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:#1a1000;cursor:pointer;white-space:nowrap;}
+.api-input{flex:1;padding:11px 13px;background:var(--bg4);border:0.5px solid var(--border2);border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;}
+.api-input:focus{border-color:var(--poke-yellow);}
+.api-btn{padding:11px 16px;background:var(--poke-yellow);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:#1a0f00;cursor:pointer;white-space:nowrap;letter-spacing:1px;}
 .api-saved{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--green);margin-top:8px;}
 
 /* ── SCANNER ── */
 .card-name-wrap{margin-bottom:14px;}
 .card-name-input{width:100%;padding:12px 14px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--text);outline:none;-webkit-appearance:none;}
-.card-name-input:focus{border-color:var(--gold);}
-.cam-trigger{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1.5px dashed var(--border2);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;position:relative;overflow:hidden;transition:border-color 0.2s;}
+.card-name-input:focus{border-color:var(--poke-yellow);}
+
+/* Camera trigger */
+.cam-trigger{width:100%;aspect-ratio:3/4;background:var(--bg2);border:1.5px dashed rgba(255,203,5,0.25);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;position:relative;overflow:hidden;transition:border-color 0.2s;}
 .cam-trigger:active{opacity:0.85;}
 .cam-trigger.has-image{border-style:solid;border-color:var(--border);}
-.cam-trigger img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:18px;}
-.cam-trigger canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:18px;}
-.ct-placeholder{display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;}
-.ct-icon{font-size:52px;line-height:1;opacity:0.25;}
+.cam-trigger img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border-radius:20px;}
+.cam-trigger canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:20px;}
+/* Pokéball watermark inside viewer */
+.cam-pokeball{position:absolute;width:180px;height:180px;opacity:0.04;pointer-events:none;}
+.ct-placeholder{display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;z-index:1;}
+.ct-icon{font-size:52px;line-height:1;opacity:0.3;}
 .ct-text{font-size:11px;color:var(--text3);text-align:center;line-height:1.9;}
-.ct-sub{font-size:10px;color:var(--text3);opacity:0.6;margin-top:2px;}
-.corner-marker{position:absolute;width:20px;height:20px;pointer-events:none;opacity:0;transition:opacity 0.4s;}
+.ct-sub{font-size:10px;color:var(--text3);opacity:0.5;margin-top:2px;}
+
+/* Scan overlays */
+.corner-marker{position:absolute;width:22px;height:22px;pointer-events:none;opacity:0;transition:opacity 0.4s;}
 .corner-marker.tl{top:5%;left:3%;border-top:2.5px solid;border-left:2.5px solid;border-radius:3px 0 0 0;}
 .corner-marker.tr{top:5%;right:3%;border-top:2.5px solid;border-right:2.5px solid;border-radius:0 3px 0 0;}
 .corner-marker.bl{bottom:5%;left:3%;border-bottom:2.5px solid;border-left:2.5px solid;border-radius:0 0 0 3px;}
 .corner-marker.br{bottom:5%;right:3%;border-bottom:2.5px solid;border-right:2.5px solid;border-radius:0 0 3px 0;}
-.corner-marker.good{border-color:var(--green);}.corner-marker.warn{border-color:var(--orange);}.corner-marker.bad{border-color:var(--red);}
+.corner-marker.good{border-color:var(--green);}.corner-marker.warn{border-color:var(--orange);}.corner-marker.bad{border-color:var(--poke-red);}
 .center-grid{position:absolute;inset:5%;border:1px solid;opacity:0;transition:opacity 0.4s;pointer-events:none;border-radius:4px;}
 .show-markers .corner-marker,.show-markers .center-grid{opacity:0.7;}
-.scan-sweep{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;pointer-events:none;}
+.scan-sweep{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--poke-yellow),transparent);opacity:0;pointer-events:none;}
 .is-scanning .scan-sweep{opacity:1;animation:sweep 1.1s ease-in-out infinite;}
 @keyframes sweep{0%{top:5%}100%{top:95%}}
-.grade-stamp{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.82);border:1px solid var(--gold);border-radius:8px;padding:6px 18px;display:none;align-items:center;gap:8px;white-space:nowrap;}
-.gs-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
+.grade-stamp{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.88);border:1.5px solid var(--poke-yellow);border-radius:10px;padding:6px 18px;display:none;align-items:center;gap:8px;white-space:nowrap;}
+.gs-num{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;color:var(--poke-yellow);}
 .gs-lbl{font-size:9px;letter-spacing:1px;color:#aaa;line-height:1.6;}
-.scan-badge{position:absolute;top:12px;right:12px;background:rgba(232,185,35,0.92);color:#1a1000;font-size:9px;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none;}
+.scan-badge{position:absolute;top:12px;right:12px;background:var(--poke-red);color:#fff;font-size:9px;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none;font-weight:500;}
 .is-scanning .scan-badge{display:block;}
 
 /* ── BUTTONS ── */
 .btn-row{display:flex;gap:10px;margin-top:12px;}
 .btn{flex:1;padding:14px;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);transition:all 0.15s;-webkit-appearance:none;}
-.btn:active{opacity:0.75;transform:scale(0.98);}
-.btn.go{background:var(--gold);border-color:var(--gold);color:#1a1000;font-weight:500;font-size:12px;}
+.btn:active{opacity:0.75;transform:scale(0.97);}
+.btn.go{background:var(--poke-yellow);border-color:var(--poke-yellow);color:#1a0f00;font-weight:500;font-size:12px;letter-spacing:1.5px;}
 .btn.save{background:transparent;border-color:var(--green);color:var(--green);}
 .btn:disabled{opacity:0.3;cursor:not-allowed;}
 .status-bar{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:10px;line-height:1.7;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);}
-.spinner{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:5px;}
+.spinner{display:inline-block;width:10px;height:10px;border:1.5px solid var(--border2);border-top-color:var(--poke-yellow);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:5px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* ── RESULT PANELS ── */
 .results-section{margin-top:16px;display:flex;flex-direction:column;gap:12px;}
-.rcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;}
-.rcard-hd{padding:10px 14px;border-bottom:0.5px solid var(--border);font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+.rcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:18px;overflow:hidden;position:relative;}
+.rcard::before{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;border-radius:50%;border:14px solid rgba(255,203,5,0.04);pointer-events:none;}
+.rcard-hd{padding:11px 15px;border-bottom:0.5px solid var(--border);font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;background:rgba(255,203,5,0.03);}
 .rcard-bd{padding:14px;}
 .no-data{text-align:center;color:var(--text3);font-size:11px;padding:20px 10px;line-height:2;}
+
+/* Grade */
 .grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-.grade-ring{width:66px;height:66px;border-radius:50%;border:2.5px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
-.gr-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
+.grade-ring{width:68px;height:68px;border-radius:50%;border:2.5px solid var(--poke-yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,203,5,0.06);box-shadow:0 0 20px rgba(255,203,5,0.15);}
+.gr-num{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;color:var(--poke-yellow);}
 .gr-max{font-size:9px;color:var(--text2);}
-.gi-name{font-size:15px;font-weight:500;letter-spacing:1px;}
+.gi-name{font-size:14px;font-weight:500;letter-spacing:1px;}
 .gi-card{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.6;}
 .bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.bar-item{background:var(--bg3);border-radius:8px;padding:9px 11px;}
+.bar-item{background:var(--bg3);border-radius:8px;padding:9px 11px;border:0.5px solid var(--border);}
 .bar-lbl{font-size:9px;color:var(--text2);letter-spacing:1px;margin-bottom:6px;text-transform:uppercase;}
-.bar-track{height:4px;background:var(--border2);border-radius:2px;}
+.bar-track{height:4px;background:var(--bg4);border-radius:2px;}
 .bar-fill{height:4px;border-radius:2px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}
 .bar-score{font-size:12px;font-weight:500;margin-top:5px;}
-.notes-box{background:var(--bg3);border-radius:8px;padding:10px 12px;font-size:10px;line-height:1.9;color:var(--text2);margin-bottom:12px;}
-.acc-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:12px;}
-.acc-bar-w{flex:1;height:5px;background:var(--border2);border-radius:3px;}
-.acc-bar-f{height:5px;border-radius:3px;background:var(--gold);transition:width 0.8s;}
+.notes-box{background:var(--bg3);border-radius:8px;padding:10px 12px;font-size:10px;line-height:1.9;color:var(--text2);margin-bottom:12px;border:0.5px solid var(--border);}
+.acc-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:12px;border:0.5px solid var(--border);}
+.acc-bar-w{flex:1;height:5px;background:var(--bg4);border-radius:3px;}
+.acc-bar-f{height:5px;border-radius:3px;background:var(--poke-yellow);transition:width 0.8s;}
 .acc-lbl{font-size:9px;letter-spacing:1px;color:var(--text2);white-space:nowrap;}
-.acc-pct{font-size:12px;font-weight:500;min-width:36px;text-align:right;}
+.acc-pct{font-size:12px;font-weight:500;min-width:36px;text-align:right;color:var(--poke-yellow);}
 .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.dg-item{background:var(--bg3);border-radius:8px;padding:8px 9px;}
+.dg-item{background:var(--bg3);border-radius:8px;padding:8px 9px;border:0.5px solid var(--border);}
 .dg-lbl{font-size:8px;color:var(--text2);letter-spacing:1px;margin-bottom:3px;text-transform:uppercase;}
 .dg-txt{font-size:9px;line-height:1.5;color:var(--text2);}
+
+/* Price table */
 .base-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:0.5px solid var(--border);}
 .base-lbl{font-size:9px;letter-spacing:1px;color:var(--text2);text-transform:uppercase;}
-.base-val{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;}
+.base-val{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--poke-yellow);}
 .ptable{width:100%;border-collapse:collapse;font-size:11px;}
 .ptable th{font-size:9px;letter-spacing:1px;color:var(--text2);padding:5px 8px;border-bottom:0.5px solid var(--border);text-align:left;text-transform:uppercase;}
 .ptable td{padding:8px;border-bottom:0.5px solid var(--border);}
 .ptable tr:last-child td{border-bottom:none;}
-.ptable tr.cur td{background:var(--gold-dim);}
-.ptable tr.cur td:first-child{border-left:2px solid var(--gold);}
+.ptable tr.cur td{background:var(--poke-yellow-dim);}
+.ptable tr.cur td:first-child{border-left:2px solid var(--poke-yellow);}
 .gpill{display:inline-block;padding:3px 7px;border-radius:4px;font-size:9px;font-weight:500;}
 .disclaimer{font-size:9px;color:var(--text3);margin-top:10px;line-height:1.8;}
 
 /* PSA 10 banner */
-.max-banner{background:rgba(232,185,35,0.06);border:1px solid var(--gold-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
-.max-banner-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
-.max-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#FFD700;line-height:1;}
+.max-banner{background:linear-gradient(135deg,rgba(255,203,5,0.08),rgba(255,215,0,0.04));border:1px solid var(--poke-yellow-border);border-radius:14px;padding:14px 16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.max-banner::after{content:'👑';position:absolute;right:12px;bottom:-4px;font-size:48px;opacity:0.08;}
+.max-banner-label{font-size:9px;letter-spacing:2px;color:var(--poke-yellow);text-transform:uppercase;display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.max-val{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:1px;color:#FFD700;line-height:1;}
 .max-sub{font-size:9px;color:var(--text2);line-height:1.7;}
-.max-vs{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--gold-border);}
+.max-vs{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--poke-yellow-border);}
 .max-vs-item{flex:1;text-align:center;}
 .max-vs-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:3px;text-transform:uppercase;}
 .max-vs-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
@@ -162,34 +211,41 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .ebay-listing-price{font-size:10px;font-weight:500;color:var(--green);white-space:nowrap;}
 
 /* ── PORTFOLIO ── */
-.grand-total{background:rgba(232,185,35,0.06);border:1px solid var(--gold-border);border-radius:14px;padding:16px;margin-bottom:14px;}
-.gt-label{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
-.gt-val{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:1px;color:#FFD700;line-height:1;margin-bottom:4px;}
+.grand-total{background:linear-gradient(135deg,rgba(204,0,0,0.15),rgba(255,203,5,0.08));border:1px solid var(--poke-red-border);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.grand-total::before{content:'';position:absolute;top:-50px;right:-50px;width:160px;height:160px;border-radius:50%;border:28px solid rgba(204,0,0,0.08);}
+.grand-total::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;border-radius:50%;border:18px solid rgba(255,203,5,0.06);}
+.gt-label{font-size:9px;letter-spacing:2px;color:var(--poke-yellow);text-transform:uppercase;margin-bottom:6px;}
+.gt-val{font-family:'Bebas Neue',sans-serif;font-size:46px;letter-spacing:1px;color:#FFD700;line-height:1;margin-bottom:4px;text-shadow:0 0 30px rgba(255,203,5,0.3);}
 .gt-sub{font-size:9px;color:var(--text2);line-height:1.7;}
+
 .three-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
-.tcol{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;}
+.tcol{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;position:relative;overflow:hidden;}
+.tcol::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;border:10px solid rgba(255,203,5,0.04);}
 .tcol-lbl{font-size:8px;letter-spacing:1px;color:var(--text2);margin-bottom:5px;text-transform:uppercase;line-height:1.4;}
 .tcol-val{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;}
 .tcol-sub{font-size:8px;color:var(--text3);margin-top:3px;}
+
 .port-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;}
+.stat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;bottom:-20px;right:-20px;width:70px;height:70px;border-radius:50%;border:12px solid rgba(255,203,5,0.04);}
 .stat-lbl{font-size:9px;letter-spacing:1.5px;color:var(--text2);margin-bottom:6px;text-transform:uppercase;}
 .stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1;}
 .stat-sub{font-size:9px;color:var(--text3);margin-top:3px;}
+
 .port-toolbar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
 .filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
 .filter-row::-webkit-scrollbar{display:none;}
 .ftab{flex-shrink:0;padding:6px 14px;border-radius:6px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);transition:all 0.15s;white-space:nowrap;}
-.ftab.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.ftab.active{border-color:var(--poke-yellow);color:var(--poke-yellow);background:var(--poke-yellow-dim);}
 .sort-select{width:100%;padding:9px 12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text2);outline:none;-webkit-appearance:none;}
 
 /* ── CARD GRID ── */
 .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;position:relative;transition:transform 0.15s,border-color 0.15s;cursor:pointer;}
-.pcard:active{transform:scale(0.97);}
-.pcard:hover{border-color:var(--gold-border);}
-.pcard-img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain;background:#080808;display:block;}
-.pcard-img-ph{width:100%;aspect-ratio:2.5/3.5;background:#080808;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1a1a1a;}
+.pcard{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;overflow:hidden;position:relative;transition:transform 0.15s,border-color 0.2s,box-shadow 0.2s;cursor:pointer;}
+.pcard:active{transform:scale(0.96);}
+.pcard:hover{border-color:var(--poke-yellow-border);box-shadow:0 4px 20px rgba(255,203,5,0.1);}
+.pcard-img{width:100%;aspect-ratio:2.5/3.5;object-fit:contain;background:#080810;display:block;}
+.pcard-img-ph{width:100%;aspect-ratio:2.5/3.5;background:#080810;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1a1a2a;}
 .pcard-body{padding:9px 10px;}
 .pcard-name{font-size:10px;font-weight:500;line-height:1.4;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .pcard-vals{display:flex;flex-direction:column;gap:4px;}
@@ -197,78 +253,168 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 .pval-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;white-space:nowrap;}
 .pval-num{font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;white-space:nowrap;}
 .pcard-badge{position:absolute;top:7px;right:7px;font-size:8px;font-weight:500;padding:2px 6px;border-radius:3px;letter-spacing:0.5px;}
-.pcard-del{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:5px;background:rgba(244,67,54,0.88);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:2;}
-.pcard-expand-hint{font-size:8px;color:var(--text3);text-align:center;padding:4px 0 2px;letter-spacing:1px;}
+.pcard-del{position:absolute;top:7px;left:7px;width:22px;height:22px;border-radius:5px;background:rgba(204,0,0,0.88);border:none;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;z-index:2;}
+.pcard-expand-hint{font-size:8px;color:var(--text3);text-align:center;padding:4px 0 2px;letter-spacing:1px;border-top:0.5px solid var(--border);}
 
-/* ── CARD DETAIL SHEET ── */
-.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+/* ── DETAIL SHEET ── */
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.3s;}
 .sheet-backdrop.open{opacity:1;pointer-events:all;}
-.sheet{position:fixed;bottom:0;left:0;right:0;max-height:92vh;background:var(--bg2);border-radius:24px 24px 0 0;z-index:201;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.sheet{position:fixed;bottom:0;left:0;right:0;max-height:93vh;background:var(--bg2);border-radius:26px 26px 0 0;z-index:201;transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);overflow-y:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--poke-yellow-border);}
 .sheet.open{transform:translateY(0);}
-.sheet-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;flex-shrink:0;}
+.sheet-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
 .sheet-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
-.sheet-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--text);}
+.sheet-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--poke-yellow);}
 .sheet-close{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .sheet-body{padding:16px 16px calc(var(--safe-bot) + 24px);}
-
-/* Sheet card image */
-.sheet-card-img{width:100%;max-width:220px;margin:0 auto 16px;display:block;aspect-ratio:2.5/3.5;object-fit:contain;background:#080808;border-radius:12px;border:0.5px solid var(--border);}
-.sheet-card-img-ph{width:100%;max-width:220px;margin:0 auto 16px;aspect-ratio:2.5/3.5;background:#080808;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:48px;color:#1a1a1a;}
-
-/* Sheet grade hero */
-.sheet-grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:16px;background:var(--bg3);border-radius:12px;padding:14px;}
-.sheet-grade-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
-.sgr-num{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;}
+.sheet-card-img{width:100%;max-width:200px;margin:0 auto 16px;display:block;aspect-ratio:2.5/3.5;object-fit:contain;background:#080810;border-radius:14px;border:1px solid var(--poke-yellow-border);box-shadow:0 8px 32px rgba(255,203,5,0.12);}
+.sheet-card-img-ph{width:100%;max-width:200px;margin:0 auto 16px;aspect-ratio:2.5/3.5;background:#080810;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:48px;color:#1a1a2a;}
+.sheet-grade-hero{display:flex;align-items:center;gap:14px;margin-bottom:16px;background:var(--bg3);border-radius:14px;padding:14px;border:0.5px solid var(--border);}
+.sheet-grade-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--poke-yellow);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,203,5,0.08);box-shadow:0 0 24px rgba(255,203,5,0.2);}
+.sgr-num{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;color:var(--poke-yellow);}
 .sgr-max{font-size:9px;color:var(--text2);}
 .sheet-grade-info{flex:1;}
 .sgi-grade{font-size:14px;font-weight:500;letter-spacing:1px;margin-bottom:4px;}
 .sgi-name{font-size:12px;color:var(--text);margin-bottom:2px;}
 .sgi-set{font-size:10px;color:var(--text2);}
 .sgi-date{font-size:9px;color:var(--text3);margin-top:6px;}
-
-/* Sheet section headers */
-.sheet-section{margin-bottom:14px;}
-.sheet-section-hd{font-size:9px;letter-spacing:2px;color:var(--text2);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:0.5px solid var(--border);}
-
-/* Sheet bars */
-.sheet-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.sheet-bar-item{background:var(--bg3);border-radius:8px;padding:10px 12px;}
-
-/* Sheet cost profile */
+.sheet-section{margin-bottom:16px;}
+.sheet-section-hd{font-size:9px;letter-spacing:2px;color:var(--poke-yellow);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--poke-yellow-border);display:flex;align-items:center;gap:6px;}
+.sheet-bars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sheet-bar-item{background:var(--bg3);border-radius:10px;padding:10px 12px;border:0.5px solid var(--border);}
 .cost-profile{display:flex;flex-direction:column;gap:10px;}
-.cp-row{background:var(--bg3);border-radius:12px;padding:14px 16px;}
+.cp-row{background:var(--bg3);border-radius:14px;padding:14px 16px;border:0.5px solid var(--border);}
 .cp-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .cp-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.cp-value{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.cp-value{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;}
 .cp-sub{font-size:9px;color:var(--text2);line-height:1.7;}
-.cp-detail{display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);}
+.cp-detail{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);}
 .cp-detail-item{text-align:center;flex:1;}
 .cp-detail-lbl{font-size:8px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
 .cp-detail-val{font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;}
 
 .empty-port{text-align:center;padding:40px 20px;color:var(--text2);grid-column:1/-1;}
+
+/* ── EBAY SELL BUTTON ── */
+.sell-section{margin-top:16px;background:linear-gradient(135deg,rgba(255,203,5,0.06),rgba(204,0,0,0.06));border:1px solid var(--poke-yellow-border);border-radius:16px;padding:16px;position:relative;overflow:hidden;}
+.sell-section::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;border:18px solid rgba(255,203,5,0.06);}
+.sell-section-hd{font-size:9px;letter-spacing:2px;color:var(--poke-yellow);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.sell-title-preview{font-size:10px;color:var(--text);background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:10px;line-height:1.7;border:0.5px solid var(--border2);}
+.sell-title-label{font-size:8px;letter-spacing:1px;color:var(--text2);text-transform:uppercase;margin-bottom:4px;}
+.sell-price-row{display:flex;gap:8px;margin-bottom:12px;}
+.sell-price-item{flex:1;background:var(--bg3);border-radius:8px;padding:8px 10px;text-align:center;border:0.5px solid var(--border);}
+.sell-price-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.sell-price-val{font-family:'Bebas Neue',sans-serif;font-size:16px;line-height:1;}
+.sell-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;background:var(--poke-yellow);border:none;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1.5px;color:#1a0f00;cursor:pointer;text-decoration:none;}
+.sell-btn:active{opacity:0.85;transform:scale(0.98);}
+.sell-disclaimer{font-size:9px;color:var(--text3);text-align:center;margin-top:8px;line-height:1.7;}
 .ep-icon{font-size:48px;margin-bottom:14px;opacity:0.15;}
 .ep-text{font-size:11px;line-height:2.2;}
-.ep-cta{margin-top:16px;padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--gold-border);background:var(--gold-dim);color:var(--gold);display:inline-block;}
+.ep-cta{margin-top:16px;padding:12px 24px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;border:0.5px solid var(--poke-yellow-border);background:var(--poke-yellow-dim);color:var(--poke-yellow);display:inline-block;}
 
-.toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(10px);background:#1c1c1c;color:var(--text);padding:10px 20px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;border:0.5px solid var(--gold-border);white-space:nowrap;}
+.toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg3);color:var(--text);padding:10px 20px;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;border:0.5px solid var(--poke-yellow-border);white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
+
+<!-- Background Pokémon silhouettes -->
+<div class="bg-layer">
+  <!-- Pokéball circles -->
+  <div class="pokeball-bg pb1"></div>
+  <div class="pokeball-bg pb2"></div>
+  <div class="pokeball-bg pb3"></div>
+
+  <!-- Charizard -->
+  <svg class="sil-1" viewBox="0 0 200 220" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 10 C85 10 75 20 70 32 C60 28 48 32 44 42 C36 40 28 46 30 56 C22 58 18 68 24 76 C18 82 20 94 30 96 C28 106 36 114 46 112 C50 124 62 130 74 126 C76 138 86 146 98 144 C96 156 104 166 116 164 C114 176 124 184 136 180 C134 192 146 200 158 194 C162 188 158 178 152 176 C156 170 152 160 144 160 C148 152 144 140 136 140 C142 132 138 118 128 118 C136 108 130 92 118 94 C124 82 116 68 104 70 C108 58 100 44 88 46 C90 34 98 22 100 10Z M70 100 C66 108 70 118 78 120 C82 128 92 130 98 124 M130 60 C134 52 142 48 150 52"/>
+    <path d="M155 30 C160 22 168 18 172 24 C176 18 184 20 184 28 C190 26 192 34 188 38 C194 40 192 50 186 50 C188 58 180 62 174 58"/>
+    <ellipse cx="158" cy="45" rx="6" ry="4" transform="rotate(-20 158 45)"/>
+  </svg>
+
+  <!-- Pikachu -->
+  <svg class="sil-2" viewBox="0 0 180 200" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="90" cy="120" rx="50" ry="60"/>
+    <ellipse cx="90" cy="80" rx="38" ry="36"/>
+    <path d="M62 55 C58 30 52 15 60 8 C68 2 74 12 72 30"/>
+    <path d="M118 55 C122 30 128 15 120 8 C112 2 106 12 108 30"/>
+    <ellipse cx="76" cy="78" rx="6" ry="7"/>
+    <ellipse cx="104" cy="78" rx="6" ry="7"/>
+    <path d="M82 92 C84 96 88 98 90 98 C92 98 96 96 98 92"/>
+    <ellipse cx="68" cy="100" rx="12" ry="8"/>
+    <ellipse cx="112" cy="100" rx="12" ry="8"/>
+    <path d="M44 130 C30 120 20 130 22 142 C24 154 36 158 44 152"/>
+    <path d="M136 130 C150 120 160 130 158 142 C156 154 144 158 136 152"/>
+    <path d="M70 180 C60 190 50 195 55 200 C60 205 75 195 80 185"/>
+    <path d="M110 180 C120 190 130 195 125 200 C120 205 105 195 100 185"/>
+    <path d="M168 48 C172 38 180 32 180 40 C180 48 170 58 164 60 C170 62 176 72 170 76 C164 80 158 68 160 60"/>
+  </svg>
+
+  <!-- Mewtwo -->
+  <svg class="sil-3" viewBox="0 0 160 200" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="80" cy="60" rx="30" ry="34"/>
+    <path d="M58 55 C50 40 48 22 56 16 C62 10 68 18 66 32"/>
+    <path d="M102 55 C110 40 112 22 104 16 C98 10 92 18 94 32"/>
+    <rect x="62" y="88" width="36" height="60" rx="18"/>
+    <path d="M62 100 C44 98 32 108 34 122 C36 136 50 142 62 136"/>
+    <path d="M98 100 C116 98 128 108 126 122 C124 136 110 142 98 136"/>
+    <path d="M68 148 C62 162 58 178 66 182 C72 186 78 172 76 160"/>
+    <path d="M92 148 C98 162 102 178 94 182 C88 186 82 172 84 160"/>
+    <path d="M80 88 C80 68 90 52 100 50 C112 48 118 62 112 76"/>
+    <ellipse cx="70" cy="58" rx="5" ry="6"/>
+    <ellipse cx="90" cy="58" rx="5" ry="6"/>
+  </svg>
+
+  <!-- Gengar -->
+  <svg class="sil-4" viewBox="0 0 160 160" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M80 20 C50 20 26 40 26 66 C26 84 36 98 50 106 C44 112 38 122 42 132 C46 142 58 144 68 140 C72 150 76 158 80 158 C84 158 88 150 92 140 C102 144 114 142 118 132 C122 122 116 112 110 106 C124 98 134 84 134 66 C134 40 110 20 80 20Z"/>
+    <path d="M20 55 C10 48 8 36 16 32 C10 28 8 18 18 18 C14 12 22 6 28 12"/>
+    <path d="M140 55 C150 48 152 36 144 32 C150 28 152 18 142 18 C146 12 138 6 132 12"/>
+    <ellipse cx="64" cy="68" rx="10" ry="11" fill="#0a0a0f"/>
+    <ellipse cx="96" cy="68" rx="10" ry="11" fill="#0a0a0f"/>
+    <path d="M60 90 C64 96 72 100 80 100 C88 100 96 96 100 90" stroke="#0a0a0f" stroke-width="3" fill="none"/>
+  </svg>
+
+  <!-- Eevee -->
+  <svg class="sil-5" viewBox="0 0 120 130" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="80" rx="36" ry="40"/>
+    <ellipse cx="60" cy="52" rx="28" ry="26"/>
+    <path d="M40 38 C36 22 32 12 38 8 C44 4 48 14 46 28"/>
+    <path d="M80 38 C84 22 88 12 82 8 C76 4 72 14 74 28"/>
+    <ellipse cx="50" cy="50" rx="5" ry="6"/>
+    <ellipse cx="70" cy="50" rx="5" ry="6"/>
+    <path d="M54 64 C56 68 60 70 60 70 C60 70 64 68 66 64"/>
+    <path d="M36 62 C24 56 18 64 20 72 C22 80 32 82 36 76"/>
+    <path d="M84 62 C96 56 102 64 100 72 C98 80 88 82 84 76"/>
+    <ellipse cx="60" cy="55" rx="20" ry="12"/>
+    <path d="M45 118 C40 125 35 128 38 132 C41 136 50 128 52 120"/>
+    <path d="M75 118 C80 125 85 128 82 132 C79 136 70 128 68 120"/>
+  </svg>
+</div>
+
 <div class="app">
   <div class="header">
-    <div class="logo">POKE<em>SCAN</em></div>
+    <div class="logo-wrap">
+      <!-- Pokéball icon -->
+      <svg class="pokeball-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="15" stroke="#FFCB05" stroke-width="1.5"/>
+        <path d="M1 16 Q16 16 31 16" stroke="#FFCB05" stroke-width="1.5"/>
+        <path d="M2 16 C2 8.3 8.3 2 16 2 C23.7 2 30 8.3 30 16" fill="#CC0000" opacity="0.7"/>
+        <circle cx="16" cy="16" r="4.5" fill="#0a0a0f" stroke="#FFCB05" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="2" fill="#FFCB05"/>
+      </svg>
+      <div class="logo">POKE<em>SCAN</em></div>
+    </div>
     <div class="tag">AI GRADER</div>
   </div>
 
+  <!-- API Setup -->
   <div class="api-card">
     <h3>🔑 Setup Required</h3>
     <p>Enter your Anthropic API key to enable AI grading.<br>
     Get one free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
     <div class="api-row">
       <input class="api-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="api-btn" onclick="saveApiKey()">Save</button>
+      <button class="api-btn" onclick="saveApiKey()">SAVE</button>
     </div>
     <div id="api-saved" style="display:none;" class="api-saved">✓ Ready to grade!</div>
   </div>
@@ -279,6 +425,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
       <input class="card-name-input" type="text" id="cname" placeholder="Card name (e.g. Charizard Base Set 1st Ed)..." autocorrect="off">
     </div>
     <div class="cam-trigger" id="cam-trigger" onclick="triggerCapture()">
+      <!-- Pokéball watermark -->
+      <svg class="cam-pokeball" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="95" stroke="white" stroke-width="8"/>
+        <line x1="5" y1="100" x2="195" y2="100" stroke="white" stroke-width="8"/>
+        <circle cx="100" cy="100" r="28" fill="#0a0a0f" stroke="white" stroke-width="8"/>
+        <circle cx="100" cy="100" r="12" fill="white"/>
+      </svg>
       <canvas id="annot-canvas"></canvas>
       <img id="card-preview" style="display:none">
       <div class="ct-placeholder" id="ct-placeholder">
@@ -298,20 +451,23 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
         <div class="gs-lbl">PSA<br>GRADE</div>
       </div>
     </div>
+
     <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleFile(this.files[0])">
     <input type="file" id="library-input" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+
     <div class="btn-row">
       <button class="btn" onclick="document.getElementById('library-input').click()">📁 Library</button>
       <button class="btn" onclick="clearAll()">Clear</button>
-      <button class="btn go" id="btn-go" onclick="runGrade()" disabled>Grade ▶</button>
+      <button class="btn go" id="btn-go" onclick="runGrade()" disabled>GRADE ▶</button>
     </div>
     <div id="save-row" style="display:none;margin-top:10px;">
       <button class="btn save" style="width:100%;padding:14px;" onclick="saveToPortfolio()">＋ Save to Portfolio</button>
     </div>
     <div class="status-bar" id="status">Tap the camera area or upload a photo to begin.</div>
+
     <div class="results-section" id="results-section">
       <div class="rcard">
-        <div class="rcard-hd"><span>Grade Analysis</span><span id="conf-tag" style="font-size:9px;"></span></div>
+        <div class="rcard-hd"><span>⚡ Grade Analysis</span><span id="conf-tag" style="font-size:9px;color:var(--poke-yellow);"></span></div>
         <div class="rcard-bd" id="grade-panel"><div class="no-data">Scan a card to see<br>your grade analysis</div></div>
       </div>
       <div class="rcard">
@@ -335,7 +491,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
     <div class="three-cols" id="three-cols-box" style="display:none;">
       <div class="tcol">
         <div class="tcol-lbl">🟡 PSA Graded</div>
-        <div class="tcol-val" id="tc-psa" style="color:var(--gold)">$0</div>
+        <div class="tcol-val" id="tc-psa" style="color:var(--poke-yellow)">$0</div>
         <div class="tcol-sub">current grade</div>
       </div>
       <div class="tcol">
@@ -350,8 +506,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
       </div>
     </div>
     <div class="port-stats">
-      <div class="stat-card"><div class="stat-lbl">Cards</div><div class="stat-val" id="stat-total">0</div><div class="stat-sub">in vault</div></div>
-      <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg">—</div><div class="stat-sub">PSA average</div></div>
+      <div class="stat-card"><div class="stat-lbl">Cards</div><div class="stat-val" id="stat-total" style="color:var(--poke-yellow)">0</div><div class="stat-sub">in vault</div></div>
+      <div class="stat-card"><div class="stat-lbl">Avg Grade</div><div class="stat-val" id="stat-avg" style="color:var(--poke-red)">—</div><div class="stat-sub">PSA average</div></div>
     </div>
     <div class="port-toolbar">
       <div class="filter-row">
@@ -378,10 +534,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
   <button class="bnav-item active" id="bnav-scanner" onclick="switchTab('scanner')">
     <div class="bnav-icon">◈</div>
     <div class="bnav-label">Scanner</div>
+    <div class="bnav-dot"></div>
   </button>
   <button class="bnav-item" id="bnav-portfolio" onclick="switchTab('portfolio')">
     <div class="bnav-icon">◉</div>
     <div class="bnav-label">Portfolio <span id="port-count"></span></div>
+    <div class="bnav-dot"></div>
   </button>
 </div>
 
@@ -399,294 +557,173 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace
 <div class="toast" id="toast"></div>
 
 <script>
-// ── PWA: Register Service Worker ──
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  });
+// ── PWA Service Worker ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
 }
 
-// ── IndexedDB for persistent storage ──
-const DB_NAME = 'pokescan_db';
-const DB_VERSION = 1;
-const STORE_NAME = 'portfolio';
-let db = null;
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = e => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains(STORE_NAME)) {
-        d.createObjectStore(STORE_NAME, { keyPath: 'id' });
-      }
-    };
-    req.onsuccess = e => { db = e.target.result; resolve(db); };
-    req.onerror = () => reject(req.error);
-  });
-}
-
-function dbGetAll() {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readonly');
-    const req = tx.objectStore(STORE_NAME).getAll();
-    req.onsuccess = () => resolve(req.result || []);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-function dbPut(item) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const req = tx.objectStore(STORE_NAME).put(item);
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
-  });
-}
-
-function dbDelete(id) {
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    const req = tx.objectStore(STORE_NAME).delete(id);
-    req.onsuccess = () => resolve();
-    req.onerror = () => reject(req.error);
-  });
-}
+// ── IndexedDB ──
+const DB_NAME='pokescan_db',DB_VERSION=1,STORE_NAME='portfolio';
+let db=null;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE_NAME))d.createObjectStore(STORE_NAME,{keyPath:'id'});};r.onsuccess=e=>{db=e.target.result;res(db);};r.onerror=()=>rej(r.error);});}
+function dbGetAll(){return new Promise((res,rej)=>{const r=db.transaction(STORE_NAME,'readonly').objectStore(STORE_NAME).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error);});}
+function dbPut(item){return new Promise((res,rej)=>{const r=db.transaction(STORE_NAME,'readwrite').objectStore(STORE_NAME).put(item);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function dbDelete(id){return new Promise((res,rej)=>{const r=db.transaction(STORE_NAME,'readwrite').objectStore(STORE_NAME).delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
 
 // ── State ──
-let apiKey = localStorage.getItem('pokescan_apikey') || '';
-let b64 = null, lastResult = null, lastImgSrc = null;
-let portfolio = [], activeFilter = 'all', activeSort = 'newest';
+let apiKey=localStorage.getItem('pokescan_apikey')||'';
+let b64=null,lastResult=null,lastImgSrc=null;
+let portfolio=[],activeFilter='all',activeSort='newest';
 
-// ── Init ──
-window.onload = async () => {
-  if (apiKey) {
-    document.getElementById('api-key-input').value = apiKey;
-    document.getElementById('api-saved').style.display = 'flex';
-  }
-  try {
-    await openDB();
-    portfolio = await dbGetAll();
-    // Sort by savedAt desc
-    portfolio.sort((a,b) => new Date(b.savedAt) - new Date(a.savedAt));
-  } catch(e) {
-    // Fall back to localStorage if IndexedDB fails
-    try { portfolio = JSON.parse(localStorage.getItem('pokescan_portfolio') || '[]'); } catch(e2) {}
-  }
+window.onload=async()=>{
+  if(apiKey){document.getElementById('api-key-input').value=apiKey;document.getElementById('api-saved').style.display='flex';}
+  try{await openDB();portfolio=await dbGetAll();portfolio.sort((a,b)=>new Date(b.savedAt)-new Date(a.savedAt));}
+  catch(e){try{portfolio=JSON.parse(localStorage.getItem('pokescan_portfolio')||'[]');}catch(e2){}}
   updatePortCount();
 };
 
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val.startsWith('sk-')) { alert('Please enter a valid Anthropic API key (starts with sk-)'); return; }
-  apiKey = val;
-  localStorage.setItem('pokescan_apikey', apiKey);
-  document.getElementById('api-saved').style.display = 'flex';
-  showToast('✓ API key saved!');
+function saveApiKey(){
+  const val=document.getElementById('api-key-input').value.trim();
+  if(!val.startsWith('sk-')){alert('Please enter a valid Anthropic API key (starts with sk-)');return;}
+  apiKey=val;localStorage.setItem('pokescan_apikey',apiKey);
+  document.getElementById('api-saved').style.display='flex';showToast('✓ API key saved!');
 }
 
-function switchTab(t) {
-  ['scanner','portfolio'].forEach(id => {
-    document.getElementById('view-'+id).classList.toggle('active', id===t);
-    document.getElementById('bnav-'+id).classList.toggle('active', id===t);
-  });
-  if (t==='portfolio') renderPortfolio();
-  window.scrollTo(0,0);
+function switchTab(t){
+  ['scanner','portfolio'].forEach(id=>{document.getElementById('view-'+id).classList.toggle('active',id===t);document.getElementById('bnav-'+id).classList.toggle('active',id===t);});
+  if(t==='portfolio')renderPortfolio();window.scrollTo(0,0);
 }
 
-// ── File handling ──
-function triggerCapture() { if (!b64) document.getElementById('camera-input').click(); }
+function triggerCapture(){if(!b64)document.getElementById('camera-input').click();}
 
-function handleFile(file) {
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    lastImgSrc = e.target.result;
-    b64 = e.target.result.split(',')[1];
-    const preview = document.getElementById('card-preview');
-    preview.src = e.target.result; preview.style.display = 'block';
-    document.getElementById('ct-placeholder').style.display = 'none';
+function handleFile(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    lastImgSrc=e.target.result;b64=e.target.result.split(',')[1];
+    const p=document.getElementById('card-preview');p.src=e.target.result;p.style.display='block';
+    document.getElementById('ct-placeholder').style.display='none';
     document.getElementById('cam-trigger').classList.add('has-image');
-    clearAnnotations();
-    document.getElementById('grade-stamp').style.display = 'none';
+    clearAnnotations();document.getElementById('grade-stamp').style.display='none';
     document.getElementById('cam-trigger').classList.remove('show-markers','is-scanning');
-    document.getElementById('save-row').style.display = 'none';
-    lastResult = null;
-    document.getElementById('btn-go').disabled = false;
-    document.getElementById('status').textContent = 'Photo loaded — tap "Grade" to analyze.';
-  };
-  reader.readAsDataURL(file);
+    document.getElementById('save-row').style.display='none';lastResult=null;
+    document.getElementById('btn-go').disabled=false;
+    document.getElementById('status').textContent='Photo loaded — tap "GRADE" to analyze.';
+  };reader.readAsDataURL(file);
 }
 
-function clearAll() {
-  b64=null; lastResult=null; lastImgSrc=null;
-  const p=document.getElementById('card-preview');
-  p.style.display='none'; p.src='';
+function clearAll(){
+  b64=null;lastResult=null;lastImgSrc=null;
+  const p=document.getElementById('card-preview');p.style.display='none';p.src='';
   document.getElementById('ct-placeholder').style.display='flex';
   document.getElementById('cam-trigger').classList.remove('has-image','show-markers','is-scanning');
-  clearAnnotations();
-  document.getElementById('grade-stamp').style.display='none';
-  document.getElementById('save-row').style.display='none';
-  document.getElementById('btn-go').disabled=true;
+  clearAnnotations();document.getElementById('grade-stamp').style.display='none';
+  document.getElementById('save-row').style.display='none';document.getElementById('btn-go').disabled=true;
   document.getElementById('status').textContent='Tap the camera area or upload a photo to begin.';
   document.getElementById('grade-panel').innerHTML='<div class="no-data">Scan a card to see<br>your grade analysis</div>';
   document.getElementById('price-panel').innerHTML='<div class="no-data">PSA prices will appear<br>after grading</div>';
   document.getElementById('ebay-panel').innerHTML='<div class="no-data">eBay sold prices will<br>load after grading</div>';
   document.getElementById('conf-tag').textContent='';
-  document.getElementById('camera-input').value='';
-  document.getElementById('library-input').value='';
+  document.getElementById('camera-input').value='';document.getElementById('library-input').value='';
 }
 
-function clearAnnotations() {
-  const canvas=document.getElementById('annot-canvas');
-  canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.className=el.className.replace(/good|warn|bad/g,'').trim();
-  });
+function clearAnnotations(){
+  const c=document.getElementById('annot-canvas');c.getContext('2d').clearRect(0,0,c.width,c.height);
+  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{const el=document.getElementById(id);el.className=el.className.replace(/good|warn|bad/g,'').trim();});
 }
 
-// ── Grade ──
-async function runGrade() {
-  if (!apiKey) { alert('Please enter your Anthropic API key first.'); return; }
-  if (!b64) return;
-  const btnGo=document.getElementById('btn-go');
-  const statusEl=document.getElementById('status');
-  const trigger=document.getElementById('cam-trigger');
-  btnGo.disabled=true; btnGo.textContent='Grading...';
-  trigger.classList.add('is-scanning'); trigger.classList.remove('show-markers');
-  clearAnnotations();
-  statusEl.innerHTML='<span class="spinner"></span>Analyzing card + fetching eBay sold data...';
+async function runGrade(){
+  if(!apiKey){alert('Please enter your Anthropic API key first.');return;}
+  if(!b64)return;
+  const btnGo=document.getElementById('btn-go'),statusEl=document.getElementById('status'),trigger=document.getElementById('cam-trigger');
+  btnGo.disabled=true;btnGo.textContent='SCANNING...';
+  trigger.classList.add('is-scanning');trigger.classList.remove('show-markers');clearAnnotations();
+  statusEl.innerHTML='<span class="spinner"></span>Analyzing card + fetching eBay data...';
   const cardName=document.getElementById('cname').value.trim()||'Pokémon card';
-  try {
+  try{
     const [r,ebayData]=await Promise.all([callClaude(b64,cardName),fetchEbaySold(cardName)]);
-    lastResult=r; lastResult.ebayData=ebayData;
-    renderAnnotations(r);
-    renderGrade(r,cardName);
-    renderPrices(r);
+    lastResult=r;lastResult.ebayData=ebayData;
+    renderAnnotations(r);renderGrade(r,cardName);renderPrices(r);
     document.getElementById('save-row').style.display='block';
     document.getElementById('conf-tag').textContent=`${r.confidence||85}% confidence`;
     statusEl.textContent='✓ Done! Save to Portfolio to track this card.';
     setTimeout(()=>document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'}),300);
-  } catch(e) {
-    statusEl.textContent='⚠ '+(e.message||'Analysis failed. Check your API key.');
-  }
-  trigger.classList.remove('is-scanning');
-  btnGo.disabled=false; btnGo.textContent='Grade ▶';
+  }catch(e){statusEl.textContent='⚠ '+(e.message||'Analysis failed. Check your API key.');}
+  trigger.classList.remove('is-scanning');btnGo.disabled=false;btnGo.textContent='GRADE ▶';
 }
 
-// ── Claude ──
-async function callClaude(imgB64, cardName) {
-  const prompt=`You are a professional PSA Pokémon card grader.
-Card: "${cardName}"
-Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %.
-Respond ONLY with valid JSON, no markdown:
-{"cardName":"name","set":"set if identifiable","overallGrade":8,"gradeName":"NM-MT","centering":7,"corners":8,"edges":8,"surface":9,"confidence":82,"centeringNote":"brief","cornersNote":"brief","edgesNote":"brief","surfaceNote":"brief","notes":"1-2 sentence summary","basePrice":25.00,"psaPrices":{"10":500,"9":200,"8":100,"7":60,"6":40,"5":30,"4":22,"3":18,"2":15,"1":12}}`;
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgB64}},{type:'text',text:prompt}]}]})
-  });
-  if (!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`API error ${resp.status}`);}
+async function callClaude(imgB64,cardName){
+  const prompt=`You are a professional PSA Pokémon card grader. Card: "${cardName}". Score each 1-10: centering, corners, edges, surface. Give overall PSA grade 1-10 and confidence %. Respond ONLY with valid JSON, no markdown: {"cardName":"name","set":"set if identifiable","overallGrade":8,"gradeName":"NM-MT","centering":7,"corners":8,"edges":8,"surface":9,"confidence":82,"centeringNote":"brief","cornersNote":"brief","edgesNote":"brief","surfaceNote":"brief","notes":"1-2 sentence summary","basePrice":25.00,"psaPrices":{"10":500,"9":200,"8":100,"7":60,"6":40,"5":30,"4":22,"3":18,"2":15,"1":12}}`;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-opus-4-5',max_tokens:1200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgB64}},{type:'text',text:prompt}]}]})});
+  if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`API error ${resp.status}`);}
   const data=await resp.json();
   const text=(data.content||[]).map(b=>b.text||'').join('');
   return JSON.parse(text.replace(/```json|```/g,'').trim());
 }
 
-// ── eBay RSS ──
-async function fetchEbaySold(cardName) {
+async function fetchEbaySold(cardName){
   const panel=document.getElementById('ebay-panel');
   panel.innerHTML='<div class="ebay-loading"><span class="spinner"></span>Fetching eBay PSA 10 sold listings...</div>';
-  try {
+  try{
     const query=encodeURIComponent(cardName+' pokemon PSA 10');
-    const ebayUrl=`https://www.ebay.com/sch/i.html?_nkw=${query}&LH_Sold=1&LH_Complete=1&_rss=1`;
-    const proxyUrl=`https://api.allorigins.win/get?url=${encodeURIComponent(ebayUrl)}`;
-    const resp=await fetch(proxyUrl);
-    if(!resp.ok) throw new Error('proxy failed');
-    const wrapper=await resp.json();
-    const doc=new DOMParser().parseFromString(wrapper.contents,'text/xml');
+    const proxyUrl=`https://api.allorigins.win/get?url=${encodeURIComponent('https://www.ebay.com/sch/i.html?_nkw='+query+'&LH_Sold=1&LH_Complete=1&_rss=1')}`;
+    const resp=await fetch(proxyUrl);if(!resp.ok)throw new Error();
+    const doc=new DOMParser().parseFromString((await resp.json()).contents,'text/xml');
     const items=Array.from(doc.querySelectorAll('item'));
-    if(!items.length){panel.innerHTML=ebayErrorHTML(cardName);return null;}
+    if(!items.length){panel.innerHTML=ebayErr(cardName);return null;}
     const listings=[];
     for(const item of items.slice(0,25)){
-      const title=item.querySelector('title')?.textContent||'';
-      const desc=item.querySelector('description')?.textContent||'';
-      const matches=[...(desc+' '+title).matchAll(/\$\s*([\d,]+(?:\.\d{2})?)/g)];
-      for(const m of matches){
+      const combined=(item.querySelector('description')?.textContent||'')+' '+(item.querySelector('title')?.textContent||'');
+      for(const m of [...combined.matchAll(/\$\s*([\d,]+(?:\.\d{2})?)/g)]){
         const price=parseFloat(m[1].replace(/,/g,''));
-        if(price>=1&&price<500000){listings.push({title:title.replace(/<[^>]+>/g,'').trim().slice(0,60),price});break;}
+        if(price>=1&&price<500000){listings.push({title:(item.querySelector('title')?.textContent||'').replace(/<[^>]+>/g,'').trim().slice(0,60),price});break;}
       }
     }
-    if(!listings.length){panel.innerHTML=ebayErrorHTML(cardName);return null;}
+    if(!listings.length){panel.innerHTML=ebayErr(cardName);return null;}
     listings.sort((a,b)=>b.price-a.price);
-    const highest=listings[0].price;
-    const avg=listings.reduce((s,l)=>s+l.price,0)/listings.length;
-    const lowest=listings[listings.length-1].price;
-    const count=listings.length;
-    const top5=listings.slice(0,5);
-    const ebayData={highest,avg,lowest,count,top5,cardName};
-    renderEbayPanel(ebayData);
-    return ebayData;
-  } catch(e){panel.innerHTML=ebayErrorHTML(cardName);return null;}
+    const highest=listings[0].price,avg=listings.reduce((s,l)=>s+l.price,0)/listings.length,lowest=listings[listings.length-1].price,count=listings.length,top5=listings.slice(0,5);
+    const d={highest,avg,lowest,count,top5,cardName};
+    const fmt=v=>'$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+    panel.innerHTML=`<div class="ebay-banner"><div class="ebay-banner-label"><span class="ebay-live-dot"></span>Highest PSA 10 Sold</div><div class="ebay-top-val">${fmt(highest)}</div><div class="ebay-sub">From ${count} recent eBay sold listing${count!==1?'s':''}</div><div class="ebay-stats"><div><div class="ebay-stat-lbl">Highest</div><div class="ebay-stat-val">${fmt(highest)}</div></div><div><div class="ebay-stat-lbl">Avg Sale</div><div class="ebay-stat-val">${fmt(avg)}</div></div><div><div class="ebay-stat-lbl">Lowest</div><div class="ebay-stat-val">${fmt(lowest)}</div></div></div></div><div class="ebay-listings">${top5.map(l=>`<div class="ebay-listing-row"><div class="ebay-listing-title">${l.title||'—'}</div><div class="ebay-listing-price">${fmt(l.price)}</div></div>`).join('')}</div><a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(cardName+' PSA 10')}&LH_Sold=1&LH_Complete=1&LH_ItemCondition=4" target="_blank">🔗 See all "${cardName} PSA 10" sold listings →</a>`;
+    return d;
+  }catch(e){panel.innerHTML=ebayErr(cardName);return null;}
+}
+function ebayErr(n){
+  const cardName = n || document.getElementById('cname').value.trim() || 'pokemon card';
+  const q = encodeURIComponent(cardName + ' PSA 10');
+  const url = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1&LH_ItemCondition=4`;
+  return `<div class="ebay-error" style="padding:10px 0;">
+    <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.8;">Could not auto-fetch sold data.<br>Tap below to view exact listings:</div>
+    <a class="ebay-link" href="${url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--green-dim);border:0.5px solid var(--green-border);border-radius:8px;padding:10px 14px;font-size:10px;color:var(--green);text-decoration:none;letter-spacing:0.5px;">
+      🔗 Search "<strong style="color:#fff;">${cardName} PSA 10</strong>" sold listings on eBay
+    </a>
+  </div>`;
 }
 
-function ebayErrorHTML(cardName){
-  const q=encodeURIComponent(cardName+' pokemon PSA 10');
-  return `<div class="ebay-error">Could not auto-fetch eBay data.<br><a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 View PSA 10 sold listings on eBay →</a></div>`;
-}
-
-function renderEbayPanel(d){
-  const fmt=v=>'$'+v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-  document.getElementById('ebay-panel').innerHTML=`
-    <div class="ebay-banner">
-      <div class="ebay-banner-label"><span class="ebay-live-dot"></span>Highest PSA 10 Sold</div>
-      <div class="ebay-top-val">${fmt(d.highest)}</div>
-      <div class="ebay-sub">From ${d.count} recent eBay PSA 10 sold listing${d.count!==1?'s':''}</div>
-      <div class="ebay-stats">
-        <div><div class="ebay-stat-lbl">Highest</div><div class="ebay-stat-val">${fmt(d.highest)}</div></div>
-        <div><div class="ebay-stat-lbl">Avg Sale</div><div class="ebay-stat-val">${fmt(d.avg)}</div></div>
-        <div><div class="ebay-stat-lbl">Lowest</div><div class="ebay-stat-val">${fmt(d.lowest)}</div></div>
-      </div>
-    </div>
-    <div class="ebay-listings">${d.top5.map(l=>`<div class="ebay-listing-row"><div class="ebay-listing-title">${l.title||'—'}</div><div class="ebay-listing-price">${fmt(l.price)}</div></div>`).join('')}</div>
-    <a class="ebay-link" href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(d.cardName+' pokemon PSA 10')}&LH_Sold=1&LH_Complete=1" target="_blank">🔗 See all sold listings on eBay →</a>`;
-}
-
-// ── Colors ──
-const GC={10:'#FFD700',9:'#e8b923',8:'#7ec8e3',7:'#7ec8e3',6:'#a8d8a8',5:'#a8d8a8',4:'#f4a261',3:'#f4a261',2:'#e07070',1:'#e07070'};
+const GC={10:'#FFD700',9:'#FFCB05',8:'#7ec8e3',7:'#7ec8e3',6:'#a8d8a8',5:'#a8d8a8',4:'#f4a261',3:'#f4a261',2:'#e07070',1:'#e07070'};
 const GN={10:'GEM MINT',9:'MINT',8:'NM-MT',7:'NEAR MINT',6:'EX-MT',5:'EXCELLENT',4:'VG-EX',3:'VERY GOOD',2:'GOOD',1:'POOR'};
-const SC=s=>s>=8?'#4caf50':s>=5?'#ff9800':'#f44336';
+const SC=s=>s>=8?'#4caf50':s>=5?'#ff9800':'#CC0000';
 const SCls=s=>s>=8?'good':s>=5?'warn':'bad';
 const f$=v=>v>0?'$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}):'—';
 const f$d=v=>v>0?'$'+Number(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
 
-// ── Annotations ──
 function renderAnnotations(r){
-  const trigger=document.getElementById('cam-trigger');
-  const canvas=document.getElementById('annot-canvas');
-  const ctx=canvas.getContext('2d');
-  const rect=trigger.getBoundingClientRect();
-  canvas.width=rect.width; canvas.height=rect.height;
+  const trigger=document.getElementById('cam-trigger'),canvas=document.getElementById('annot-canvas'),ctx=canvas.getContext('2d'),rect=trigger.getBoundingClientRect();
+  canvas.width=rect.width;canvas.height=rect.height;
   const cls=SCls(r.corners);
-  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.className=el.className.replace(/good|warn|bad/g,'').trim()+' '+cls;
-  });
+  ['cm-tl','cm-tr','cm-bl','cm-br'].forEach(id=>{const el=document.getElementById(id);el.className=el.className.replace(/good|warn|bad/g,'').trim()+' '+cls;});
   document.getElementById('cg').style.borderColor=SC(r.centering);
-  const w=canvas.width,h=canvas.height,p=0.05;
-  const x0=w*p,y0=h*p,x1=w*(1-p),y1=h*(1-p);
-  ctx.save();
-  ctx.strokeStyle=SC(r.edges);ctx.lineWidth=1.5;ctx.setLineDash([6,4]);ctx.globalAlpha=0.75;
+  const w=canvas.width,h=canvas.height,p=0.05,x0=w*p,y0=h*p,x1=w*(1-p),y1=h*(1-p);
+  ctx.save();ctx.strokeStyle=SC(r.edges);ctx.lineWidth=1.5;ctx.setLineDash([6,4]);ctx.globalAlpha=0.75;
   [[x0+16,y0,x1-16,y0],[x0+16,y1,x1-16,y1],[x0,y0+16,x0,y1-16],[x1,y0+16,x1,y1-16]].forEach(([ax,ay,bx,by])=>{ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.stroke();});
   if(r.surface<8){ctx.setLineDash([]);ctx.fillStyle=SC(r.surface);ctx.globalAlpha=0.8;ctx.beginPath();ctx.arc(w*0.5,h*0.42,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.globalAlpha=0.4;ctx.stroke();}
-  ctx.restore();
-  trigger.classList.add('show-markers');
+  ctx.restore();trigger.classList.add('show-markers');
   const stamp=document.getElementById('grade-stamp'),num=document.getElementById('gs-num');
-  num.textContent=r.overallGrade;num.style.color=GC[r.overallGrade]||'#e8b923';stamp.style.display='flex';
+  num.textContent=r.overallGrade;num.style.color=GC[r.overallGrade]||'#FFCB05';stamp.style.display='flex';
 }
 
 function renderGrade(r,cardName){
-  const g=r.overallGrade,gc=GC[g]||'#e8b923';
+  const g=r.overallGrade,gc=GC[g]||'#FFCB05';
   const criteria=[{l:'Centering',s:r.centering},{l:'Corners',s:r.corners},{l:'Edges',s:r.edges},{l:'Surface',s:r.surface}];
   document.getElementById('grade-panel').innerHTML=`
     <div class="grade-hero">
@@ -705,11 +742,8 @@ function renderGrade(r,cardName){
 
 function renderPrices(r){
   const g=r.overallGrade,prices=r.psaPrices||{},base=r.basePrice||0;
-  const psa10=prices[10]||prices['10']||0;
-  const psaCur=prices[g]||prices[String(g)]||0;
-  const uplift=psa10-psaCur;
-  const upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0;
-  const is10=g===10;
+  const psa10=prices[10]||prices['10']||0,psaCur=prices[g]||prices[String(g)]||0;
+  const uplift=psa10-psaCur,upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0,is10=g===10;
   const rows=[10,9,8,7,6,5,4,3,2,1].map(grade=>{
     const price=prices[grade]||prices[String(grade)],isCur=grade===g,color=GC[grade];
     return `<tr class="${isCur?'cur':''}"><td><span class="gpill" style="background:${color}22;color:${color}">${grade}</span> ${GN[grade]}${isCur?' ◀':''}${grade===10&&!isCur?' 👑':''}</td><td style="text-align:right;font-weight:${isCur||grade===10?500:400};color:${grade===10?'#FFD700':'inherit'}">$${price?Number(price).toLocaleString():'—'}</td></tr>`;
@@ -726,43 +760,13 @@ function renderPrices(r){
     <div class="disclaimer">* AI estimates. Verify on TCGPlayer or PSA for current data.</div>`;
 }
 
-// ── Portfolio save/delete ──
 async function saveToPortfolio(){
-  if(!lastResult) return;
+  if(!lastResult)return;
   const prices=lastResult.psaPrices||{},g=lastResult.overallGrade,eb=lastResult.ebayData||{};
-  const entry={
-    id:Date.now(),
-    cardName:lastResult.cardName||document.getElementById('cname').value.trim()||'Unknown Card',
-    set:lastResult.set||'',
-    overallGrade:g,
-    gradeName:lastResult.gradeName||GN[g],
-    basePrice:lastResult.basePrice||0,
-    psaPrice:prices[g]||prices[String(g)]||0,
-    psa10Price:prices[10]||prices['10']||0,
-    ebayHighest:eb.highest||0,
-    ebayAvg:eb.avg||0,
-    ebayLowest:eb.lowest||0,
-    ebayCount:eb.count||0,
-    centering:lastResult.centering,corners:lastResult.corners,
-    edges:lastResult.edges,surface:lastResult.surface,
-    confidence:lastResult.confidence||80,
-    notes:lastResult.notes||'',
-    centeringNote:lastResult.centeringNote||'',
-    cornersNote:lastResult.cornersNote||'',
-    edgesNote:lastResult.edgesNote||'',
-    surfaceNote:lastResult.surfaceNote||'',
-    imgSrc:lastImgSrc,
-    savedAt:new Date().toISOString()
-  };
+  const entry={id:Date.now(),cardName:lastResult.cardName||document.getElementById('cname').value.trim()||'Unknown Card',set:lastResult.set||'',overallGrade:g,gradeName:lastResult.gradeName||GN[g],basePrice:lastResult.basePrice||0,psaPrice:prices[g]||prices[String(g)]||0,psa10Price:prices[10]||prices['10']||0,ebayHighest:eb.highest||0,ebayAvg:eb.avg||0,ebayLowest:eb.lowest||0,ebayCount:eb.count||0,centering:lastResult.centering,corners:lastResult.corners,edges:lastResult.edges,surface:lastResult.surface,confidence:lastResult.confidence||80,notes:lastResult.notes||'',centeringNote:lastResult.centeringNote||'',cornersNote:lastResult.cornersNote||'',edgesNote:lastResult.edgesNote||'',surfaceNote:lastResult.surfaceNote||'',imgSrc:lastImgSrc,savedAt:new Date().toISOString()};
   portfolio.unshift(entry);
-  try {
-    await dbPut(entry);
-  } catch(e) {
-    // Fallback to localStorage
-    try{localStorage.setItem('pokescan_portfolio',JSON.stringify(portfolio));}catch(e2){}
-  }
-  updatePortCount();
-  showToast('✓ Saved to portfolio!');
+  try{await dbPut(entry);}catch(e){try{localStorage.setItem('pokescan_portfolio',JSON.stringify(portfolio));}catch(e2){}}
+  updatePortCount();showToast('✓ Saved to portfolio!');
   document.getElementById('save-row').style.display='none';
   document.getElementById('status').textContent='✓ Saved! Scan another card anytime.';
 }
@@ -770,17 +774,11 @@ async function saveToPortfolio(){
 async function deleteCard(id){
   portfolio=portfolio.filter(c=>c.id!==id);
   try{await dbDelete(id);}catch(e){try{localStorage.setItem('pokescan_portfolio',JSON.stringify(portfolio));}catch(e2){}}
-  updatePortCount();
-  closeSheet();
-  renderPortfolio();
-  showToast('Card removed.');
+  updatePortCount();closeSheet();renderPortfolio();showToast('Card removed.');
 }
 
-function updatePortCount(){
-  document.getElementById('port-count').textContent=portfolio.length?`(${portfolio.length})`:'';
-}
+function updatePortCount(){document.getElementById('port-count').textContent=portfolio.length?`(${portfolio.length})`:''}
 
-// ── Portfolio render ──
 function setFilter(f,el){activeFilter=f;document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderPortfolio();}
 function setSort(v){activeSort=v;renderPortfolio();}
 
@@ -791,38 +789,25 @@ function renderPortfolio(){
   const ebayTotal=portfolio.reduce((s,c)=>s+(Number(c.ebayHighest)||0),0);
   const avgGrade=total?(portfolio.reduce((s,c)=>s+c.overallGrade,0)/total).toFixed(1):'—';
   const grandTotal=portfolio.reduce((s,c)=>s+Math.max(Number(c.psaPrice)||0,Number(c.psa10Price)||0,Number(c.ebayHighest)||0),0);
-
-  document.getElementById('stat-total').textContent=total;
-  document.getElementById('stat-avg').textContent=avgGrade;
+  document.getElementById('stat-total').textContent=total;document.getElementById('stat-avg').textContent=avgGrade;
   const show=total>0;
   document.getElementById('grand-total-box').style.display=show?'block':'none';
   document.getElementById('three-cols-box').style.display=show?'grid':'none';
-  if(show){
-    document.getElementById('gt-val').textContent=f$(grandTotal);
-    document.getElementById('tc-psa').textContent=f$(psaTotal);
-    document.getElementById('tc-max').textContent=f$(max10Total);
-    document.getElementById('tc-ebay').textContent=f$(ebayTotal);
-  }
-
+  if(show){document.getElementById('gt-val').textContent=f$(grandTotal);document.getElementById('tc-psa').textContent=f$(psaTotal);document.getElementById('tc-max').textContent=f$(max10Total);document.getElementById('tc-ebay').textContent=f$(ebayTotal);}
   let cards=[...portfolio];
-  if(activeFilter==='gem') cards=cards.filter(c=>c.overallGrade===10);
-  else if(activeFilter==='mint') cards=cards.filter(c=>c.overallGrade===9);
-  else if(activeFilter==='mid') cards=cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
-  else if(activeFilter==='low') cards=cards.filter(c=>c.overallGrade<=4);
-  if(activeSort==='grade-hi') cards.sort((a,b)=>b.overallGrade-a.overallGrade);
-  else if(activeSort==='grade-lo') cards.sort((a,b)=>a.overallGrade-b.overallGrade);
-  else if(activeSort==='value-hi') cards.sort((a,b)=>(b.ebayHighest||0)-(a.ebayHighest||0));
-  else if(activeSort==='name') cards.sort((a,b)=>a.cardName.localeCompare(b.cardName));
-
+  if(activeFilter==='gem')cards=cards.filter(c=>c.overallGrade===10);
+  else if(activeFilter==='mint')cards=cards.filter(c=>c.overallGrade===9);
+  else if(activeFilter==='mid')cards=cards.filter(c=>c.overallGrade>=5&&c.overallGrade<=8);
+  else if(activeFilter==='low')cards=cards.filter(c=>c.overallGrade<=4);
+  if(activeSort==='grade-hi')cards.sort((a,b)=>b.overallGrade-a.overallGrade);
+  else if(activeSort==='grade-lo')cards.sort((a,b)=>a.overallGrade-b.overallGrade);
+  else if(activeSort==='value-hi')cards.sort((a,b)=>(b.ebayHighest||0)-(a.ebayHighest||0));
+  else if(activeSort==='name')cards.sort((a,b)=>a.cardName.localeCompare(b.cardName));
   const grid=document.getElementById('card-grid');
-  if(!portfolio.length){
-    grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards yet.<br>Scan and grade cards to<br>build your vault.</div><button class="ep-cta" onclick="switchTab('scanner')">Go to Scanner ▶</button></div>`;
-    return;
-  }
+  if(!portfolio.length){grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards yet.<br>Scan and grade cards to<br>build your vault.</div><button class="ep-cta" onclick="switchTab('scanner')">Go to Scanner ▶</button></div>`;return;}
   if(!cards.length){grid.innerHTML=`<div class="empty-port"><div class="ep-icon">◻</div><div class="ep-text">No cards match this filter.</div></div>`;return;}
-
   grid.innerHTML=cards.map(c=>{
-    const gc=GC[c.overallGrade]||'#e8b923';
+    const gc=GC[c.overallGrade]||'#FFCB05';
     const imgEl=c.imgSrc?`<img class="pcard-img" src="${c.imgSrc}" alt="${c.cardName}">`:`<div class="pcard-img-ph">◻</div>`;
     return `<div class="pcard" onclick="openSheet(${c.id})">
       ${imgEl}
@@ -841,29 +826,17 @@ function renderPortfolio(){
   }).join('');
 }
 
-// ── Card Detail Sheet ──
 function openSheet(id){
-  const c=portfolio.find(x=>x.id===id);
-  if(!c) return;
-  const gc=GC[c.overallGrade]||'#e8b923';
+  const c=portfolio.find(x=>x.id===id);if(!c)return;
+  const gc=GC[c.overallGrade]||'#FFCB05';
   const criteria=[{l:'Centering',s:c.centering,n:c.centeringNote},{l:'Corners',s:c.corners,n:c.cornersNote},{l:'Edges',s:c.edges,n:c.edgesNote},{l:'Surface',s:c.surface,n:c.surfaceNote}];
   const savedDate=c.savedAt?new Date(c.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'—';
-  const psa10=Number(c.psa10Price)||0;
-  const psaCur=Number(c.psaPrice)||0;
-  const uplift=psa10-psaCur;
-  const upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0;
-
+  const psa10=Number(c.psa10Price)||0,psaCur=Number(c.psaPrice)||0,uplift=psa10-psaCur,upliftPct=psaCur>0?Math.round((uplift/psaCur)*100):0;
   document.getElementById('sheet-card-title').textContent=c.cardName;
   document.getElementById('sheet-body').innerHTML=`
-    ${c.imgSrc
-      ?`<img class="sheet-card-img" src="${c.imgSrc}" alt="${c.cardName}">`
-      :`<div class="sheet-card-img-ph">◻</div>`}
-
+    ${c.imgSrc?`<img class="sheet-card-img" src="${c.imgSrc}" alt="${c.cardName}">`:`<div class="sheet-card-img-ph">◻</div>`}
     <div class="sheet-grade-hero">
-      <div class="sheet-grade-ring" style="border-color:${gc}">
-        <div class="sgr-num" style="color:${gc}">${c.overallGrade}</div>
-        <div class="sgr-max">/10</div>
-      </div>
+      <div class="sheet-grade-ring" style="border-color:${gc}"><div class="sgr-num" style="color:${gc}">${c.overallGrade}</div><div class="sgr-max">/10</div></div>
       <div class="sheet-grade-info">
         <div class="sgi-grade" style="color:${gc}">${c.gradeName||GN[c.overallGrade]}</div>
         <div class="sgi-name">${c.cardName}</div>
@@ -871,71 +844,67 @@ function openSheet(id){
         <div class="sgi-date">Scanned ${savedDate}</div>
       </div>
     </div>
-
     <div class="sheet-section">
-      <div class="sheet-section-hd">Grading Breakdown</div>
-      <div class="sheet-bars">
-        ${criteria.map(cr=>`
-          <div class="sheet-bar-item">
-            <div class="bar-lbl">${cr.l}</div>
-            <div class="bar-track"><div class="bar-fill" style="width:${(cr.s||0)*10}%;background:${SC(cr.s||0)}"></div></div>
-            <div class="bar-score" style="color:${SC(cr.s||0)}">${cr.s||'—'}/10</div>
-            ${cr.n?`<div style="font-size:9px;color:var(--text2);margin-top:3px;line-height:1.5;">${cr.n}</div>`:''}
-          </div>`).join('')}
-      </div>
+      <div class="sheet-section-hd">⚡ Grading Breakdown</div>
+      <div class="sheet-bars">${criteria.map(cr=>`<div class="sheet-bar-item"><div class="bar-lbl">${cr.l}</div><div class="bar-track"><div class="bar-fill" style="width:${(cr.s||0)*10}%;background:${SC(cr.s||0)}"></div></div><div class="bar-score" style="color:${SC(cr.s||0)}">${cr.s||'—'}/10</div>${cr.n?`<div style="font-size:9px;color:var(--text2);margin-top:3px;line-height:1.5;">${cr.n}</div>`:''}</div>`).join('')}</div>
       ${c.notes?`<div class="notes-box">${c.notes}</div>`:''}
-      <div class="acc-row">
-        <span class="acc-lbl">AI CONFIDENCE</span>
-        <div class="acc-bar-w"><div class="acc-bar-f" style="width:${c.confidence||80}%"></div></div>
-        <span class="acc-pct">${c.confidence||80}%</span>
-      </div>
+      <div class="acc-row"><span class="acc-lbl">AI CONFIDENCE</span><div class="acc-bar-w"><div class="acc-bar-f" style="width:${c.confidence||80}%"></div></div><span class="acc-pct">${c.confidence||80}%</span></div>
     </div>
-
     <div class="sheet-section">
-      <div class="sheet-section-hd">Cost Profile</div>
+      <div class="sheet-section-hd">💰 Cost Profile</div>
       <div class="cost-profile">
-
-        <div class="cp-row" style="border:0.5px solid ${gc}33;">
-          <div class="cp-row-top">
-            <div class="cp-label" style="color:${gc}">🟡 Current PSA ${c.overallGrade} Value</div>
-          </div>
+        <div class="cp-row" style="border-color:${gc}44;">
+          <div class="cp-label" style="color:${gc}">🟡 Current PSA ${c.overallGrade} Value</div>
           <div class="cp-value" style="color:${gc}">${f$(c.psaPrice)}</div>
-          <div class="cp-sub">Estimated value at PSA grade ${c.overallGrade} (${c.gradeName||GN[c.overallGrade]})</div>
+          <div class="cp-sub">Estimated value at PSA ${c.overallGrade} — ${c.gradeName||GN[c.overallGrade]}</div>
         </div>
-
-        <div class="cp-row" style="border:0.5px solid var(--gold-border);">
-          <div class="cp-row-top">
-            <div class="cp-label" style="color:#FFD700">👑 PSA 10 Ceiling</div>
-          </div>
+        <div class="cp-row" style="border-color:rgba(255,203,5,0.3);">
+          <div class="cp-label" style="color:#FFD700">👑 PSA 10 Ceiling</div>
           <div class="cp-value" style="color:#FFD700">${f$(c.psa10Price)}</div>
           <div class="cp-sub">Maximum value if this card grades PSA 10 (Gem Mint)</div>
-          ${uplift>0?`<div class="cp-detail">
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Current</div><div class="cp-detail-val" style="color:${gc}">${f$(psaCur)}</div></div>
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Upside $</div><div class="cp-detail-val" style="color:var(--green)">+${f$(uplift)}</div></div>
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Upside %</div><div class="cp-detail-val" style="color:var(--green)">+${upliftPct}%</div></div>
-          </div>`:''}
+          ${uplift>0?`<div class="cp-detail"><div class="cp-detail-item"><div class="cp-detail-lbl">Current</div><div class="cp-detail-val" style="color:${gc}">${f$(psaCur)}</div></div><div class="cp-detail-item"><div class="cp-detail-lbl">Upside $</div><div class="cp-detail-val" style="color:var(--green)">+${f$(uplift)}</div></div><div class="cp-detail-item"><div class="cp-detail-lbl">Upside %</div><div class="cp-detail-val" style="color:var(--green)">+${upliftPct}%</div></div></div>`:''}
         </div>
-
-        <div class="cp-row" style="border:0.5px solid var(--green-border);">
-          <div class="cp-row-top">
-            <div class="cp-label" style="color:var(--green)">🟢 eBay Highest Sold (PSA 10)</div>
-          </div>
+        <div class="cp-row" style="border-color:var(--green-border);">
+          <div class="cp-label" style="color:var(--green)">🟢 eBay Highest Sold (PSA 10)</div>
           <div class="cp-value" style="color:var(--green)">${f$d(c.ebayHighest)}</div>
-          <div class="cp-sub">Highest recent sale on eBay for this card graded PSA 10</div>
-          ${c.ebayAvg>0?`<div class="cp-detail">
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Highest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayHighest)}</div></div>
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Avg Sale</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayAvg)}</div></div>
-            <div class="cp-detail-item"><div class="cp-detail-lbl">Lowest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayLowest||0)}</div></div>
-          </div>`:''}
-          ${c.ebayCount?`<div style="font-size:9px;color:var(--text3);margin-top:8px;">Based on ${c.ebayCount} sold listing${c.ebayCount!==1?'s':''}</div>`:''}
+          <div class="cp-sub">Highest recent eBay sale for PSA 10</div>
+          ${c.ebayAvg>0?`<div class="cp-detail"><div class="cp-detail-item"><div class="cp-detail-lbl">Highest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayHighest)}</div></div><div class="cp-detail-item"><div class="cp-detail-lbl">Avg Sale</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayAvg)}</div></div><div class="cp-detail-item"><div class="cp-detail-lbl">Lowest</div><div class="cp-detail-val" style="color:var(--green)">${f$d(c.ebayLowest||0)}</div></div></div>`:''}
+          ${c.ebayCount?`<div style="font-size:9px;color:var(--text3);margin-top:6px;">Based on ${c.ebayCount} sold listing${c.ebayCount!==1?'s':''}</div>`:''}
         </div>
-
       </div>
     </div>
+    <button onclick="deleteCard(${c.id})" style="width:100%;margin-top:16px;padding:14px;border-radius:12px;background:rgba(204,0,0,0.1);border:0.5px solid rgba(204,0,0,0.4);color:var(--poke-red);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;">Remove from Portfolio</button>`;
 
-    <button onclick="deleteCard(${c.id})" style="width:100%;margin-top:16px;padding:14px;border-radius:12px;background:rgba(244,67,54,0.1);border:0.5px solid rgba(244,67,54,0.4);color:var(--red);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;">Remove from Portfolio</button>
-  `;
-
+  // Inject eBay sell section after sheet body is set
+  const sellUrl = buildEbayListingUrl(c);
+  const suggestedPrice = c.ebayAvg > 0 ? c.ebayAvg : c.psaPrice > 0 ? c.psaPrice : 0;
+  const listingTitle = `${c.cardName}${c.set ? ' ' + c.set : ''} PSA ${c.overallGrade} ${c.gradeName||GN[c.overallGrade]} Pokemon Card`.slice(0,80);
+  const sellHTML = `
+    <div class="sell-section">
+      <div class="sell-section-hd">🏷️ Sell on eBay</div>
+      <div class="sell-title-label">Listing Title Preview</div>
+      <div class="sell-title-preview">${listingTitle}</div>
+      <div class="sell-price-row">
+        <div class="sell-price-item">
+          <div class="sell-price-lbl">Suggested Price</div>
+          <div class="sell-price-val" style="color:var(--poke-yellow)">${suggestedPrice > 0 ? f$d(suggestedPrice) : '—'}</div>
+        </div>
+        <div class="sell-price-item">
+          <div class="sell-price-lbl">PSA ${c.overallGrade} Est.</div>
+          <div class="sell-price-val" style="color:${GC[c.overallGrade]||'#FFCB05'}">${f$(c.psaPrice)}</div>
+        </div>
+        <div class="sell-price-item">
+          <div class="sell-price-lbl">eBay Avg</div>
+          <div class="sell-price-val" style="color:var(--green)">${c.ebayAvg > 0 ? f$d(c.ebayAvg) : '—'}</div>
+        </div>
+      </div>
+      <a class="sell-btn" href="${sellUrl}" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/></svg>
+        LIST THIS CARD ON EBAY
+      </a>
+      <div class="sell-disclaimer">Opens eBay with title, description & grade pre-filled.<br>Review and publish from your eBay account.</div>
+    </div>`;
+  document.getElementById('sheet-body').innerHTML += sellHTML;
   document.getElementById('sheet-backdrop').classList.add('open');
   document.getElementById('card-sheet').classList.add('open');
   document.body.style.overflow='hidden';
@@ -947,16 +916,53 @@ function closeSheet(){
   document.body.style.overflow='';
 }
 
-// Close sheet on swipe down
 let sheetStartY=0;
 document.getElementById('card-sheet').addEventListener('touchstart',e=>{sheetStartY=e.touches[0].clientY;},{passive:true});
-document.getElementById('card-sheet').addEventListener('touchend',e=>{
-  if(e.changedTouches[0].clientY-sheetStartY>80) closeSheet();
-},{passive:true});
+document.getElementById('card-sheet').addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-sheetStartY>80)closeSheet();},{passive:true});
+
+function buildEbayListingUrl(c) {
+  // Build a specific, descriptive listing title
+  const grade = c.overallGrade;
+  const gradeName = c.gradeName || GN[grade];
+  const title = `${c.cardName}${c.set ? ' ' + c.set : ''} PSA ${grade} ${gradeName} Pokemon Card`;
+
+  // Build a detailed description using all grading data
+  const desc = [
+    `${c.cardName}${c.set ? ' — ' + c.set : ''}`,
+    ``,
+    `PSA Grade: ${grade}/10 (${gradeName})`,
+    `AI Confidence: ${c.confidence || '—'}%`,
+    ``,
+    `GRADING BREAKDOWN:`,
+    `• Centering: ${c.centering || '—'}/10${c.centeringNote ? ' — ' + c.centeringNote : ''}`,
+    `• Corners:   ${c.corners || '—'}/10${c.cornersNote ? ' — ' + c.cornersNote : ''}`,
+    `• Edges:     ${c.edges || '—'}/10${c.edgesNote ? ' — ' + c.edgesNote : ''}`,
+    `• Surface:   ${c.surface || '—'}/10${c.surfaceNote ? ' — ' + c.surfaceNote : ''}`,
+    ``,
+    c.notes ? `CONDITION NOTES:\n${c.notes}` : '',
+    ``,
+    `Graded with PokéScan AI — ${new Date(c.savedAt).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`,
+  ].filter(Boolean).join('\n');
+
+  // Suggest price — use eBay avg if available, else PSA current grade price
+  const suggestedPrice = c.ebayAvg > 0
+    ? c.ebayAvg.toFixed(2)
+    : c.psaPrice > 0 ? c.psaPrice.toFixed(2) : '';
+
+  // eBay pre-fill sell URL
+  const params = new URLSearchParams({
+    title: title.slice(0, 80), // eBay title max 80 chars
+    description: desc,
+    category: '183454', // Pokémon TCG category ID
+    condition: grade >= 9 ? '3000' : grade >= 7 ? '4000' : '5000', // Like New / Very Good / Good
+  });
+  if (suggestedPrice) params.append('BIN_price', suggestedPrice);
+
+  return `https://www.ebay.com/sell/listing?${params.toString()}`;
+}
 
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 </script>
